@@ -7,6 +7,8 @@ import 'widgets/play_area.dart';
 import 'widgets/inventory_bar.dart';
 import 'widgets/progress_header.dart';
 import 'widgets/new_discovery_overlay.dart';
+import 'screens/mode_select_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +36,12 @@ class EmojiAlchemyApp extends StatelessWidget {
           ThemeData.dark().textTheme,
         ),
       ),
-      home: const GameScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const ModeSelectScreen(),
+        '/game': (context) => const GameScreen(),
+        '/settings': (context) => const SettingsScreen(),
+      },
     );
   }
 }

@@ -21,6 +21,12 @@ class ProgressHeader extends StatelessWidget {
         children: [
           Row(
             children: [
+              _GameIconButton(
+                icon: Icons.home_rounded,
+                color: const Color(0xFF23232D),
+                onTap: () => Navigator.pushReplacementNamed(context, '/'),
+              ),
+              const SizedBox(width: 8),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -37,7 +43,7 @@ class ProgressHeader extends StatelessWidget {
                       Text(
                         "EMOJI ALCHEMY",
                         style: GoogleFonts.outfit(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
                           letterSpacing: 1.2,
@@ -55,16 +61,16 @@ class ProgressHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               _GameIconButton(
-                icon: Icons.tune,
-                color: Colors.blueAccent,
-                onTap: () => _showModePicker(context, controller),
+                icon: Icons.settings_rounded,
+                color: const Color(0xFF23232D),
+                onTap: () => Navigator.pushNamed(context, '/settings'),
               ),
               const SizedBox(width: 8),
               _GameIconButton(
                 icon: Icons.refresh,
-                color: Colors.redAccent,
+                color: Colors.redAccent.withOpacity(0.8),
                 onTap: () => controller.clearCanvas(),
               ),
             ],
