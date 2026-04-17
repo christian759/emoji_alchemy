@@ -1,13 +1,249 @@
 class RecipeManager {
   static const Map<String, List<String>> categories = {
-    "Elements": ["🔥", "💧", "🌍", "💨", "🌫️", "🌋", "🌊", "☀️", "⛰️", "🌧️", "☄️", "⛈️", "🌈", "🌀", "🏔️", "🌪️", "🗻", "🧊", "🪨"],
-    "Nature": ["🌱", "🌳", "🌿", "🏜️", "🌾", "🌸", "🍯", "🧸", "🦋", "🦅", "🦖", "🦕", "🦠", "🧬", "🕸️", "🌵", "🐪", "🐟", "🦈", "🐋", "🐸", "🐚", "🌲", "🌻", "🍌", "🦍"],
-    "Life": ["👶", "👦", "👨", "👩", "👴", "👵", "💀", "🧟", "🧛", "🧜", "🧚", "👼", "👻", "🐵", "🦁", "🦊", "🐶", "🐱", "🐭", "🐔", "🐣", "🐥", "🧠", "🦖", "👰", "🤵", "🏇", "👨‍🚀", "Alien", "🛸"],
-    "Food": ["🥛", "🍦", "🥣", "Bread", "🥪", "🍖", "🍗", "🍟", "🍕", "🤮", "🍷", "🥳", "🥧", "😋", "🍿", "🍫", "🍱", "🍎", "🍇", "🧀", "🥚", "🍔", "🥤", "🧋", "🍨", "🍾", "🍣", "🍩", "🧁", "🥓", "🍳"],
-    "Tech": ["💻", "🖱️", "🖥️", "🎮", "📱", "📶", "🌐", "🚀", "👨‍🚀", "🛸", "🪐", "🛰️", "🔭", "🔋", "🔦", "🤖", "🦾", "👾", "📡", "📸", "🤳", "🔒", "🔓", "🎞️", "💾", "💿", "📻", "🔊", "📢", "🔌"],
-    "Tools": ["🪓", "🪵", "🔨", "🛠️", "🔧", "🧱", "🏠", "🏘️", "🏙️", "🏰", "⚓", "🚢", "🚗", "🏎️", "🏆", "🥇", "🥈", "🥉", "🔫", "🎖️", "🚒", "🚑", "⚕️", "⚙️", "🏗️", "🗽", "🏢", "🛩️", "⛵", "🛥️", "⚔️", "🛡️", "🏹", "🎯", "⚓", "🛠️", "🪑", "🛋️", "🛠️", "⚙️", "⚒️", "🛠️"],
-    "Magic": ["🪄", "🧙", "🧙‍♂️", "🔮", "✨", "👑", "👸", "🤴", "💍", "💎", "👹", "👺", "🦄", "🐉", "🐲", "⚗️", "✨", "🪄", "🔮"],
-    "Misc": ["❤️", "💖", "💝", "💔", "🩹", "💡", "💰", "🏦", "⏰", "⌛", "🎭", "🎤", "🎶", "🎵", "💃", "👯", "🎉", "🎂", "🎊", "🎸", "🥁", "⏳", "🤯", "⚖️", "🚓", "🏚️", "🌃", "💸", "📉", "📈", "🌀"]
+    "Elements": [
+      "🔥",
+      "💧",
+      "🌍",
+      "💨",
+      "🌫️",
+      "🌋",
+      "🌊",
+      "☀️",
+      "⛰️",
+      "🌧️",
+      "☄️",
+      "⛈️",
+      "🌈",
+      "🌀",
+      "🏔️",
+      "🌪️",
+      "🗻",
+      "🧊",
+      "🪨",
+    ],
+    "Nature": [
+      "🌱",
+      "🌳",
+      "🌿",
+      "🏜️",
+      "🌾",
+      "🌸",
+      "🍯",
+      "🧸",
+      "🦋",
+      "🦅",
+      "🦖",
+      "🦕",
+      "🦠",
+      "🧬",
+      "🕸️",
+      "🌵",
+      "🐪",
+      "🐟",
+      "🦈",
+      "🐋",
+      "🐸",
+      "🐚",
+      "🌲",
+      "🌻",
+      "🍌",
+      "🦍",
+    ],
+    "Life": [
+      "👶",
+      "👦",
+      "👨",
+      "👩",
+      "👴",
+      "👵",
+      "💀",
+      "🧟",
+      "🧛",
+      "🧜",
+      "🧚",
+      "👼",
+      "👻",
+      "🐵",
+      "🦁",
+      "🦊",
+      "🐶",
+      "🐱",
+      "🐭",
+      "🐔",
+      "🐣",
+      "🐥",
+      "🧠",
+      "🦖",
+      "👰",
+      "🤵",
+      "🏇",
+      "👨‍🚀",
+      "Alien",
+      "🛸",
+    ],
+    "Food": [
+      "🥛",
+      "🍦",
+      "🥣",
+      "Bread",
+      "🥪",
+      "🍖",
+      "🍗",
+      "🍟",
+      "🍕",
+      "🤮",
+      "🍷",
+      "🥳",
+      "🥧",
+      "😋",
+      "🍿",
+      "🍫",
+      "🍱",
+      "🍎",
+      "🍇",
+      "🧀",
+      "🥚",
+      "🍔",
+      "🥤",
+      "🧋",
+      "🍨",
+      "🍾",
+      "🍣",
+      "🍩",
+      "🧁",
+      "🥓",
+      "🍳",
+    ],
+    "Tech": [
+      "💻",
+      "🖱️",
+      "🖥️",
+      "🎮",
+      "📱",
+      "📶",
+      "🌐",
+      "🚀",
+      "👨‍🚀",
+      "🛸",
+      "🪐",
+      "🛰️",
+      "🔭",
+      "🔋",
+      "🔦",
+      "🤖",
+      "🦾",
+      "👾",
+      "📡",
+      "📸",
+      "🤳",
+      "🔒",
+      "🔓",
+      "🎞️",
+      "💾",
+      "💿",
+      "📻",
+      "🔊",
+      "📢",
+      "🔌",
+    ],
+    "Tools": [
+      "🪓",
+      "🪵",
+      "🔨",
+      "🛠️",
+      "🔧",
+      "🧱",
+      "🏠",
+      "🏘️",
+      "🏙️",
+      "🏰",
+      "⚓",
+      "🚢",
+      "🚗",
+      "🏎️",
+      "🏆",
+      "🥇",
+      "🥈",
+      "🥉",
+      "🔫",
+      "🎖️",
+      "🚒",
+      "🚑",
+      "⚕️",
+      "⚙️",
+      "🏗️",
+      "🗽",
+      "🏢",
+      "🛩️",
+      "⛵",
+      "🛥️",
+      "⚔️",
+      "🛡️",
+      "🏹",
+      "🎯",
+      "⚓",
+      "🛠️",
+      "🪑",
+      "🛋️",
+      "🛠️",
+      "⚙️",
+      "⚒️",
+      "🛠️",
+    ],
+    "Magic": [
+      "🪄",
+      "🧙",
+      "🧙‍♂️",
+      "🔮",
+      "✨",
+      "👑",
+      "👸",
+      "🤴",
+      "💍",
+      "💎",
+      "👹",
+      "👺",
+      "🦄",
+      "🐉",
+      "🐲",
+      "⚗️",
+      "✨",
+      "🪄",
+      "🔮",
+    ],
+    "Misc": [
+      "❤️",
+      "💖",
+      "💝",
+      "💔",
+      "🩹",
+      "💡",
+      "💰",
+      "🏦",
+      "⏰",
+      "⌛",
+      "🎭",
+      "🎤",
+      "🎶",
+      "🎵",
+      "💃",
+      "👯",
+      "🎉",
+      "🎂",
+      "🎊",
+      "🎸",
+      "🥁",
+      "⏳",
+      "🤯",
+      "⚖️",
+      "🚓",
+      "🏚️",
+      "🌃",
+      "💸",
+      "📉",
+      "📈",
+      "🌀",
+    ],
   };
 
   static const Map<String, String> clues = {
@@ -63,7 +299,7 @@ class RecipeManager {
     "☀️,🌧️": "🌈",
     "☁️,⚡": "⛈️",
     "⛰️,🔥": "🌋",
-    "⛰️,🌊": "岛",
+    "⛰️,🌊": "🏝️",
     "🌊,🌊": "🌀",
     "☀️,🌊": "☁️",
     "☁️,☁️": "🌧️",
@@ -276,35 +512,591 @@ class RecipeManager {
     "🧠,📱": "🤯",
     "🤯,🌌": "🪐",
     "🎭,🎭": "🎭",
+    "🌊,🌍": "🏝️",
+    "🌊,💨": "🌬️",
+    "🌍,☀️": "🏜️",
+    "💨,☀️": "🌡️",
+    "🌡️,💧": "🌫️",
+    "🌧️,🌍": "🌱",
+    "🌧️,🌱": "🌿",
+    "🌊,🌱": "🌿",
+    "🌳,🔥": "🪵",
+    "🌳,🪓": "🪵",
+    "🪵,🔥": "🔥",
+    "🪵,💧": "🌿",
+    "🌿,🔥": "🌫️",
+    "🌸,💨": "🌼",
+    "🌸,🌍": "🌻",
+    "🌻,☀️": "🌞",
+    "🌵,☀️": "🏜️",
+    "🐟,🔥": "🍣",
+    "🐟,🍞": "🥪",
+    "🥚,💨": "🪶",
+    "🐣,💨": "🐥",
+    "🐋,💧": "🌊",
+    "🐪,🏜️": "🐫",
+    "🦊,🌙": "🦝",
+    "👶,📚": "🎓",
+    "👨,❤️": "👨‍👩‍👧",
+    "👩,❤️": "👨‍👩‍👧",
+    "👨,🚀": "👨‍🚀",
+    "👩,🚀": "👩‍🚀",
+    "👨‍🚀,🌌": "🪐",
+    "💻,📱": "📲",
+    "💻,🔋": "🔌",
+    "📱,🔋": "🔌",
+    "📷,✨": "📸",
+    "📸,🌅": "🖼️",
+    "🔋,🔥": "⚡",
+    "🚀,🌍": "🛰️",
+    "🌐,🤖": "👾",
+    "🤖,⚡": "🔋",
+    "🛠️,⚙️": "🤖",
+    "🏠,⚙️": "🏭",
+    "🏙️,⚙️": "🏭",
+    "🏭,💨": "🌫️",
+    "🧱,🌍": "🏠",
+    "⚗️,🧪": "🧫",
+    "🧪,💥": "⚗️",
+    "🪄,💎": "👑",
+    "🔮,👑": "🧙‍♂️",
+    "🐉,🔥": "🌋",
+    "👻,🏠": "🏚️",
+    "❤️,🎵": "🎶",
+    "🎵,✨": "🎶",
+    "🎉,💥": "🎆",
+    "💰,📈": "💸",
+    "💰,🏦": "📈",
   };
 
-  static String? combine(String emoji1, String emoji2) {
-    List<String> sorted = [emoji1, emoji2]..sort();
-    String key = sorted.join(",");
-    
-    // 1. Check exact hardcoded recipes
-    if (recipes.containsKey(key)) return recipes[key];
+  static List<String> getStartingEmojis() {
+    return ["🔥", "💧", "🌍", "💨"];
+  }
 
-    // 2. Smart Synthesis Engine
+  static const Map<String, List<String>> fusionPools = {
+    "Elements|Elements": [
+      "🌫️",
+      "🌋",
+      "🌊",
+      "☀️",
+      "⛰️",
+      "🌧️",
+      "☄️",
+      "⛈️",
+      "🌈",
+      "🌀",
+      "🏔️",
+      "🌪️",
+      "🗻",
+      "🧊",
+      "🪨",
+      "🏝️",
+      "🌬️",
+      "🌡️",
+    ],
+    "Elements|Food": [
+      "🥛",
+      "🍦",
+      "🥪",
+      "🍖",
+      "🍕",
+      "🥧",
+      "🧀",
+      "🍔",
+      "🧋",
+      "🍣",
+      "🍳",
+      "😋",
+    ],
+    "Elements|Life": [
+      "👶",
+      "💀",
+      "🧟",
+      "🧜",
+      "👻",
+      "🧠",
+      "🐣",
+      "🐥",
+      "🐔",
+      "🦁",
+      "🦊",
+      "👨‍🚀",
+      "🦖",
+    ],
+    "Elements|Magic": ["🪄", "🔮", "✨", "👑", "💎", "🦄", "🐉", "🐲", "⚗️"],
+    "Elements|Misc": [
+      "❤️",
+      "💡",
+      "💰",
+      "🏦",
+      "⏰",
+      "⌛",
+      "🎭",
+      "🎵",
+      "🎉",
+      "🎆",
+      "🤯",
+      "📈",
+      "💸",
+      "🏚️",
+    ],
+    "Elements|Nature": [
+      "🌱",
+      "🌳",
+      "🌿",
+      "🌾",
+      "🌸",
+      "🌵",
+      "🍯",
+      "🌻",
+      "🌲",
+      "🐟",
+      "🐋",
+      "🐚",
+      "🪵",
+      "🦋",
+    ],
+    "Elements|Tech": [
+      "⚡",
+      "🚀",
+      "🛰️",
+      "🌐",
+      "🔋",
+      "🔦",
+      "🤖",
+      "📡",
+      "📸",
+      "🔌",
+      "🪐",
+      "👾",
+    ],
+    "Elements|Tools": [
+      "🪓",
+      "🪵",
+      "🛠️",
+      "🧱",
+      "🏠",
+      "🏙️",
+      "🚢",
+      "🚗",
+      "🏎️",
+      "⚙️",
+      "🏗️",
+    ],
+    "Food|Food": [
+      "🥛",
+      "🍦",
+      "🥣",
+      "🥪",
+      "🍖",
+      "🍟",
+      "🍕",
+      "🍷",
+      "🥳",
+      "🥧",
+      "😋",
+      "🍿",
+      "🍫",
+      "🍱",
+      "🍎",
+      "🍇",
+      "🧀",
+      "🥚",
+      "🍔",
+      "🥤",
+      "🧋",
+      "🍨",
+      "🍾",
+      "🍣",
+      "🍩",
+      "🧁",
+      "🥓",
+      "🍳",
+    ],
+    "Food|Life": ["🥛", "🍖", "🍗", "🍔", "🍣", "🥪", "🍳", "😋", "🤮"],
+    "Food|Magic": ["✨", "🪄", "🔮", "👑", "💎", "🍨", "🧁", "🎂"],
+    "Food|Misc": ["🎂", "🎉", "🥳", "🍾", "🎊", "❤️", "💖", "💰", "😋"],
+    "Food|Nature": [
+      "🍎",
+      "🍇",
+      "🍯",
+      "🥚",
+      "🍖",
+      "🍣",
+      "🧀",
+      "🥛",
+      "🥧",
+      "🍔",
+      "😋",
+    ],
+    "Food|Tech": ["🤳", "📸", "📲", "🔌", "🔋", "💾", "🌐", "🤖"],
+    "Food|Tools": ["🍳", "🥪", "🍔", "🥤", "🧋", "🏠", "⚓", "🚗"],
+    "Life|Life": [
+      "👶",
+      "👦",
+      "👨",
+      "👩",
+      "👴",
+      "👵",
+      "💀",
+      "🧟",
+      "🧛",
+      "🧜",
+      "🧚",
+      "👼",
+      "👻",
+      "🧠",
+      "👰",
+      "🤵",
+      "👨‍🚀",
+      "👨‍👩‍👧",
+    ],
+    "Life|Magic": [
+      "🧙",
+      "🧙‍♂️",
+      "🔮",
+      "✨",
+      "👑",
+      "👸",
+      "🤴",
+      "💍",
+      "🦄",
+      "👹",
+      "👺",
+    ],
+    "Life|Misc": [
+      "❤️",
+      "💖",
+      "💔",
+      "🩹",
+      "💡",
+      "⏰",
+      "🎭",
+      "🎤",
+      "💃",
+      "🎉",
+      "🤯",
+    ],
+    "Life|Nature": [
+      "👶",
+      "🐵",
+      "🦁",
+      "🦊",
+      "🐶",
+      "🐱",
+      "🐭",
+      "🐔",
+      "🐣",
+      "🐥",
+      "🧠",
+      "🦖",
+      "💀",
+      "🧟",
+    ],
+    "Life|Tech": [
+      "👨‍🚀",
+      "🤖",
+      "🦾",
+      "👾",
+      "📸",
+      "🤳",
+      "🌐",
+      "🔋",
+      "🔒",
+      "📲",
+    ],
+    "Life|Tools": [
+      "👷",
+      "🏇",
+      "🛡️",
+      "⚔️",
+      "🏹",
+      "🏠",
+      "🚗",
+      "🏆",
+      "🎯",
+      "🎖️",
+    ],
+    "Magic|Magic": [
+      "🪄",
+      "🧙",
+      "🧙‍♂️",
+      "🔮",
+      "✨",
+      "👑",
+      "👸",
+      "🤴",
+      "💍",
+      "💎",
+      "👹",
+      "👺",
+      "🦄",
+      "🐉",
+      "🐲",
+      "⚗️",
+    ],
+    "Magic|Misc": [
+      "❤️",
+      "💖",
+      "💝",
+      "💔",
+      "💡",
+      "🎭",
+      "🎶",
+      "🎵",
+      "🎉",
+      "🎂",
+      "🎆",
+      "🤯",
+      "💎",
+      "👑",
+    ],
+    "Magic|Nature": ["✨", "🦄", "🐉", "🔮", "🪄", "👑", "💎", "👺"],
+    "Magic|Tech": ["🔮", "✨", "🪄", "🪐", "👾", "🤖", "👑", "💎"],
+    "Magic|Tools": ["🪄", "🔮", "✨", "👑", "💎", "⚔️", "🛡️", "🏰", "🏆"],
+    "Misc|Misc": [
+      "❤️",
+      "💖",
+      "💝",
+      "💔",
+      "🩹",
+      "💡",
+      "💰",
+      "🏦",
+      "⏰",
+      "⌛",
+      "🎭",
+      "🎤",
+      "🎶",
+      "🎵",
+      "💃",
+      "👯",
+      "🎉",
+      "🎂",
+      "🎊",
+      "🎸",
+      "🥁",
+      "⏳",
+      "🤯",
+      "⚖️",
+      "🚓",
+      "🏚️",
+      "🌃",
+      "💸",
+      "📉",
+      "📈",
+      "🌀",
+    ],
+    "Misc|Nature": ["❤️", "💡", "🎶", "🎉", "🎂", "🤯", "🌃", "💸", "📉"],
+    "Misc|Tech": ["💡", "⏰", "🎞️", "🎵", "🎤", "📈", "📉", "💸", "🤯"],
+    "Misc|Tools": [
+      "💡",
+      "💰",
+      "🏦",
+      "⌛",
+      "🎭",
+      "🎉",
+      "🎸",
+      "🥁",
+      "💥",
+      "🏚️",
+      "🌃",
+      "🎆",
+    ],
+    "Nature|Nature": [
+      "🌿",
+      "🌳",
+      "🌸",
+      "🌻",
+      "🌲",
+      "🍯",
+      "🦋",
+      "🦅",
+      "🦖",
+      "🦕",
+      "🦠",
+      "🧬",
+      "🌵",
+      "🐪",
+      "🐟",
+      "🦈",
+      "🐋",
+      "🐸",
+      "🐚",
+      "🍌",
+      "🦍",
+    ],
+    "Nature|Tech": ["🧬", "🦠", "📡", "📸", "🚀", "🌐", "🔭", "🪐", "🤖"],
+    "Nature|Tools": ["🪵", "🧱", "🏠", "⚓", "🎯", "🛡️", "🏹", "🛠️", "🪑"],
+    "Tech|Tech": [
+      "🖥️",
+      "🌐",
+      "🚀",
+      "🪐",
+      "🛰️",
+      "🔭",
+      "🔋",
+      "🤖",
+      "🦾",
+      "👾",
+      "📡",
+      "📸",
+      "🔒",
+      "🔓",
+      "💾",
+      "💿",
+      "🔌",
+      "📲",
+    ],
+    "Tech|Tools": [
+      "🛠️",
+      "⚙️",
+      "🏗️",
+      "🚗",
+      "🏎️",
+      "🛩️",
+      "🛥️",
+      "🎯",
+      "🔌",
+      "🤖",
+      "🏭",
+    ],
+    "Tools|Tools": [
+      "🪓",
+      "🪵",
+      "🔨",
+      "🛠️",
+      "🔧",
+      "🧱",
+      "🏠",
+      "🏘️",
+      "🏙️",
+      "🏰",
+      "⚓",
+      "🚢",
+      "🚗",
+      "🏎️",
+      "🏆",
+      "🥇",
+      "🥈",
+      "🥉",
+      "🎖️",
+      "⚙️",
+      "🏗️",
+      "🗽",
+      "🏢",
+      "🛩️",
+      "⛵",
+      "🛥️",
+      "⚔️",
+      "🛡️",
+      "🏹",
+      "🎯",
+      "🪑",
+      "🛋️",
+      "⚒️",
+      "🏭",
+    ],
+  };
+
+  static final List<String> allEmojis = _buildAllEmojis();
+  static final Map<String, String> normalizedRecipes = _normalizeRecipes();
+  static final Map<String, String> allRecipes = _buildAllRecipes();
+  static final Set<String> allRecipeResults = allRecipes.values.toSet();
+
+  static String? combine(String emoji1, String emoji2) {
+    final key = _pairKey(emoji1, emoji2);
+    return allRecipes[key] ?? _synthesizeResult(emoji1, emoji2);
+  }
+
+  static List<String> _buildAllEmojis() {
+    final seen = <String>{};
+    final emojis = <String>[];
+
+    void collect(Iterable<String> source) {
+      for (final emoji in source) {
+        if (emoji.isEmpty || !seen.add(emoji)) {
+          continue;
+        }
+        emojis.add(emoji);
+      }
+    }
+
+    for (final category in categories.values) {
+      collect(category);
+    }
+    collect(getStartingEmojis());
+
+    for (final key in recipes.keys) {
+      collect(key.split(","));
+    }
+
+    collect(recipes.values);
+    collect(clues.keys);
+    collect(meanings.keys);
+
+    emojis.sort();
+    return emojis;
+  }
+
+  static Map<String, String> _buildAllRecipes() {
+    final generated = <String, String>{};
+
+    for (var i = 0; i < allEmojis.length; i++) {
+      for (var j = i; j < allEmojis.length; j++) {
+        final emoji1 = allEmojis[i];
+        final emoji2 = allEmojis[j];
+        final key = _pairKey(emoji1, emoji2);
+        generated[key] =
+            normalizedRecipes[key] ?? _synthesizeResult(emoji1, emoji2);
+      }
+    }
+
+    return generated;
+  }
+
+  static Map<String, String> _normalizeRecipes() {
+    final normalized = <String, String>{};
+
+    for (final entry in recipes.entries) {
+      final ingredients = entry.key.split(",");
+      if (ingredients.length != 2) {
+        continue;
+      }
+      normalized[_pairKey(ingredients[0], ingredients[1])] = entry.value;
+    }
+
+    return normalized;
+  }
+
+  static String _synthesizeResult(String emoji1, String emoji2) {
     final cat1 = getEmojiCategory(emoji1);
     final cat2 = getEmojiCategory(emoji2);
 
     if (emoji1 == "🔥" || emoji2 == "🔥") {
-       if (cat1 == "Nature" || cat2 == "Nature") return "🌫️";
-       if (cat1 == "Life" || cat2 == "Life") return "💀";
-       if (cat1 == "Food" || cat2 == "Food") return "🍳";
-       return "🌋";
+      if (cat1 == "Nature" || cat2 == "Nature") return "🌫️";
+      if (cat1 == "Life" || cat2 == "Life") return "💀";
+      if (cat1 == "Food" || cat2 == "Food") return "🍳";
+      if (cat1 == "Tech" || cat2 == "Tech") return "⚡";
+      return "🌋";
     }
 
     if (emoji1 == "💧" || emoji2 == "💧") {
-       if (cat1 == "Nature" || cat2 == "Nature") return "🌱";
-       if (cat1 == "Life" || cat2 == "Life") return "👶";
-       return "🌊";
+      if (cat1 == "Nature" || cat2 == "Nature") return "🌱";
+      if (cat1 == "Life" || cat2 == "Life") return "👶";
+      if (cat1 == "Tech" || cat2 == "Tech") return "🔋";
+      return "🌊";
     }
 
     if (emoji1 == "🌍" || emoji2 == "🌍") {
-       if (cat1 == "Nature" || cat2 == "Nature") return "⛰️";
-       return "🧱";
+      if (cat1 == "Nature" || cat2 == "Nature") return "⛰️";
+      if (cat1 == "Food" || cat2 == "Food") return "🥔";
+      return "🧱";
+    }
+
+    final pool = fusionPools[_categoryPairKey(cat1, cat2)];
+    if (pool != null && pool.isNotEmpty) {
+      return _pickFromPool(pool, emoji1, emoji2);
     }
 
     if (cat1 == "Tech" && cat2 == "Tech") return "⚙️";
@@ -317,16 +1109,28 @@ class RecipeManager {
 
     if (cat1 == "Tech" || cat2 == "Tech") return "🔋";
     if (cat1 == "Life" || cat2 == "Life") return "🧬";
-    
+
     return "✨";
   }
 
-  static List<String> getStartingEmojis() {
-    return ["🔥", "💧", "🌍", "💨"];
+  static String _categoryPairKey(String category1, String category2) {
+    final categories = [category1, category2]..sort();
+    return "${categories[0]}|${categories[1]}";
+  }
+
+  static String _pairKey(String emoji1, String emoji2) {
+    final sorted = [emoji1, emoji2]..sort();
+    return "${sorted[0]},${sorted[1]}";
+  }
+
+  static String _pickFromPool(List<String> pool, String emoji1, String emoji2) {
+    final seed = _pairKey(emoji1, emoji2);
+    final hash = seed.runes.fold<int>(0, (sum, rune) => sum + rune);
+    return pool[hash % pool.length];
   }
 
   static String? getHint(Set<String> discovered) {
-    for (var entry in recipes.entries) {
+    for (var entry in allRecipes.entries) {
       List<String> ingredients = entry.key.split(",");
       if (discovered.contains(ingredients[0]) &&
           discovered.contains(ingredients[1]) &&

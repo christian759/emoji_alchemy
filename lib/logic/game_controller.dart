@@ -81,23 +81,25 @@ class GameController extends ChangeNotifier {
     return 1;
   }
 
-  int get totalPossible =>
-      RecipeManager.recipes.values.toSet().length +
-      RecipeManager.getStartingEmojis().length;
+  int get totalPossible => {
+    ...RecipeManager.allRecipeResults,
+    ...RecipeManager.getStartingEmojis(),
+  }.length;
 
   List<String> get filteredInventory {
     Iterable<String> base;
     if (_currentMode == GameMode.sandbox ||
         _currentMode == GameMode.challenge) {
-      base = RecipeManager.recipes.values.toSet()
+      base = Set<String>.from(RecipeManager.allRecipeResults)
         ..addAll(RecipeManager.getStartingEmojis());
     } else {
       base = _discoveredEmojis;
     }
 
     if (_selectedCategory != 'All') {
-      base = base
-          .where((e) => RecipeManager.getEmojiCategory(e) == _selectedCategory);
+      base = base.where(
+        (e) => RecipeManager.getEmojiCategory(e) == _selectedCategory,
+      );
     }
 
     if (_searchQuery.isNotEmpty) {
@@ -123,8 +125,7 @@ class GameController extends ChangeNotifier {
     _level = prefs.getInt('level') ?? 1;
     _highScore = prefs.getInt('high_score') ?? 0;
     _challengeHighScore = prefs.getInt('challenge_high_score') ?? 0;
-    _unlockedAchievements =
-        (prefs.getStringList('achievements') ?? []).toSet();
+    _unlockedAchievements = (prefs.getStringList('achievements') ?? []).toSet();
 
     if (saved != null && saved.isNotEmpty) {
       _discoveredEmojis = saved.toSet();
@@ -207,8 +208,7 @@ class GameController extends ChangeNotifier {
     final now = DateTime.now();
     final dayOfYear = now.difference(DateTime(now.year)).inDays;
     final possibleWithClues = RecipeManager.clues.keys.toList()..sort();
-    _challengeTarget =
-        possibleWithClues[dayOfYear % possibleWithClues.length];
+    _challengeTarget = possibleWithClues[dayOfYear % possibleWithClues.length];
 
     _startChallengeTimer();
     notifyListeners();
@@ -223,8 +223,7 @@ class GameController extends ChangeNotifier {
     _challengeTimeLeft = 60;
     _challengeTimedOut = false;
     _challengeTimer?.cancel();
-    _challengeTimer =
-        Timer.periodic(const Duration(seconds: 1), (timer) {
+    _challengeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_challengeTimeLeft > 0) {
         _challengeTimeLeft--;
         notifyListeners();
@@ -268,8 +267,9 @@ class GameController extends ChangeNotifier {
   void updateEmojiPosition(String id, Offset newPosition) {
     final index = _canvasEmojis.indexWhere((e) => e.id == id);
     if (index != -1) {
-      _canvasEmojis[index] =
-          _canvasEmojis[index].copyWith(position: newPosition);
+      _canvasEmojis[index] = _canvasEmojis[index].copyWith(
+        position: newPosition,
+      );
       notifyListeners();
     }
   }
@@ -346,10 +346,13 @@ class GameController extends ChangeNotifier {
     }
 
     _awardXP(
-        isNewDiscovery: isNewDiscovery, challengeCompleted: challengeCompleted);
+      isNewDiscovery: isNewDiscovery,
+      challengeCompleted: challengeCompleted,
+    );
     _checkAchievements(
-        isNewDiscovery: isNewDiscovery,
-        challengeCompleted: challengeCompleted);
+      isNewDiscovery: isNewDiscovery,
+      challengeCompleted: challengeCompleted,
+    );
 
     notifyListeners();
   }
@@ -363,8 +366,10 @@ class GameController extends ChangeNotifier {
     });
   }
 
-  void _awardXP(
-      {required bool isNewDiscovery, required bool challengeCompleted}) {
+  void _awardXP({
+    required bool isNewDiscovery,
+    required bool challengeCompleted,
+  }) {
     int earned = 10 * comboMultiplier;
     if (isNewDiscovery) earned += 50;
     if (challengeCompleted) earned += 100;
@@ -428,7 +433,7 @@ class GameController extends ChangeNotifier {
   String? getHint() => RecipeManager.getHint(_discoveredEmojis);
 
   void unlockRandom() {
-    final allPossibleResult = RecipeManager.recipes.values.toSet();
+    final allPossibleResult = RecipeManager.allRecipeResults;
     final locked = allPossibleResult.difference(_discoveredEmojis);
     if (locked.isNotEmpty) {
       final randomEmoji = (locked.toList()..shuffle()).first;
@@ -442,8 +447,7 @@ class GameController extends ChangeNotifier {
 
   Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-        'discovered_emojis', _discoveredEmojis.toList());
+    await prefs.setStringList('discovered_emojis', _discoveredEmojis.toList());
     await prefs.setInt('xp', _xp);
     await prefs.setInt('level', _level);
   }
