@@ -18,7 +18,7 @@ class InventoryBar extends StatelessWidget {
     return Container(
       height: 180,
       decoration: BoxDecoration(
-        color: Colors.grey.shade954,
+        color: Colors.grey.shade900,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(

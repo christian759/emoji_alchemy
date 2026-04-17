@@ -39,7 +39,7 @@ class NewDiscoveryOverlay extends StatelessWidget {
                 "NEW DISCOVERY!",
                 style: GoogleFonts.outfit(
                   fontSize: 24,
-                  fontWeight: FontWeight.black,
+                  fontWeight: FontWeight.w900,
                   color: Colors.purpleAccent,
                   letterSpacing: 2,
                 ),
@@ -91,7 +91,7 @@ class NewDiscoveryOverlay extends StatelessWidget {
           ),
         )
             .animate()
-            .scale(duration: 400.ms, curve: Curves.backOut)
+            .scale(duration: 400.ms, curve: Curves.easeOutBack)
             .fadeIn(duration: 200.ms),
       ),
     );
