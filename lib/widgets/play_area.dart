@@ -22,15 +22,7 @@ class PlayArea extends StatelessWidget {
           children: [
             // Background Grid or gradient
             Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    Colors.blueGrey.shade900,
-                    Colors.black,
-                  ],
-                  radius: 1.5,
-                ),
-              ),
+              color: const Color(0xFF16161C),
             ),
             // Floating Emojis
             ...controller.canvasEmojis.map((item) {

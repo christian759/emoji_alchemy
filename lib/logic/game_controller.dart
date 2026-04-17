@@ -5,20 +5,33 @@ import '../models/emoji_item.dart';
 import 'recipe_manager.dart';
 import 'ad_manager.dart';
 
+enum GameMode { sandbox, adventure, challenge }
+
 class GameController extends ChangeNotifier {
   Set<String> _discoveredEmojis = {};
   List<EmojiItem> _canvasEmojis = [];
   bool _isLoading = true;
   String _selectedCategory = "All";
   String? _lastDiscoveredEmoji;
+  
+  GameMode _currentMode = GameMode.sandbox;
+  String? _challengeTarget;
 
   Set<String> get discoveredEmojis => _discoveredEmojis;
   List<EmojiItem> get canvasEmojis => _canvasEmojis;
   bool get isLoading => _isLoading;
   String get selectedCategory => _selectedCategory;
   String? get lastDiscoveredEmoji => _lastDiscoveredEmoji;
+  GameMode get currentMode => _currentMode;
+  String? get challengeTarget => _challengeTarget;
 
   List<String> get filteredInventory {
+    if (_currentMode == GameMode.sandbox) {
+      final all = RecipeManager.recipes.values.toSet()..addAll(RecipeManager.getStartingEmojis());
+      if (_selectedCategory == "All") return all.toList()..sort();
+      return all.where((e) => RecipeManager.getEmojiCategory(e) == _selectedCategory).toList()..sort();
+    }
+    
     if (_selectedCategory == "All") return _discoveredEmojis.toList()..sort();
     return _discoveredEmojis.where((e) => RecipeManager.getEmojiCategory(e) == _selectedCategory).toList()..sort();
   }
@@ -39,6 +52,20 @@ class GameController extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
+  }
+
+  void setMode(GameMode mode) {
+    _currentMode = mode;
+    _canvasEmojis.clear();
+    if (mode == GameMode.challenge) {
+      _pickNewChallenge();
+    }
+    notifyListeners();
+  }
+
+  void _pickNewChallenge() {
+    final allPossible = RecipeManager.recipes.values.toList();
+    _challengeTarget = (allPossible..shuffle()).first;
   }
 
   Future<void> _save() async {
@@ -101,11 +128,20 @@ class GameController extends ChangeNotifier {
       _discoveredEmojis.add(result);
       _save();
       _vibrate(intensity: 100);
-      _lastDiscoveredEmoji = result; // Trigger UI event
-      AdManager.showDiscoveryAd(); 
+      _lastDiscoveredEmoji = result; // Trigger UI event in Adventure Mode
+      if (_currentMode == GameMode.adventure) {
+        AdManager.showDiscoveryAd();
+      }
     } else {
       _vibrate(intensity: 50);
     }
+
+    if (_currentMode == GameMode.challenge && result == _challengeTarget) {
+      _vibrate(intensity: 150);
+      _pickNewChallenge();
+      // We'll handle the 'Success' UI in the widget layer
+    }
+    
     notifyListeners();
   }
 

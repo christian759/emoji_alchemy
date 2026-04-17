@@ -21,14 +21,13 @@ class NewDiscoveryOverlay extends StatelessWidget {
           margin: const EdgeInsets.all(40),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.grey.shade900,
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.purpleAccent.withOpacity(0.5), width: 2),
+            color: const Color(0xFF1A1A22),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: Colors.white10, width: 1),
             boxShadow: [
               BoxShadow(
-                color: Colors.purpleAccent.withOpacity(0.3),
-                blurRadius: 40,
-                spreadRadius: 5,
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 20,
               ),
             ],
           ),

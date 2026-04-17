@@ -29,7 +29,7 @@ class AdManager {
     InterstitialAd.load(
       adUnitId: adUnitId,
       request: const AdRequest(),
-      interstitialAdLoadCallback: InterstitialAdLoadCallback(
+      adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialAd = ad;
           _interstitialAd?.show();

@@ -17,16 +17,9 @@ class InventoryBar extends StatelessWidget {
 
     return Container(
       height: 180,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade900,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.6),
-            blurRadius: 20,
-            offset: const Offset(0, -10),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: Color(0xFF1E1E26),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         children: [
@@ -82,14 +75,21 @@ class InventoryBar extends StatelessWidget {
                         item: EmojiItem(emoji: emoji, id: 'preview'),
                       ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        EmojiWidget(
-                          item: EmojiItem(emoji: emoji, id: 'inv_$index'),
-                          isDraggable: false,
-                        ),
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        // Spawn in center area with slight random offset
+                        final offset = Offset(100.0 + (index % 5) * 20, 100.0 + (index % 3) * 20);
+                        controller.addEmojiToCanvas(emoji, offset);
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          EmojiWidget(
+                            item: EmojiItem(emoji: emoji, id: 'inv_$index'),
+                            isDraggable: false,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

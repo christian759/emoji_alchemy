@@ -16,80 +16,165 @@ class ProgressHeader extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
-        border: Border(
-          bottom: BorderSide(color: Colors.white10),
-        ),
-      ),
+      color: const Color(0xFF0F0F12),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Emoji Alchemy",
+                    style: GoogleFonts.outfit(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    controller.currentMode.name.toUpperCase(),
+                    style: GoogleFonts.outfit(
+                      fontSize: 12,
+                      letterSpacing: 1.5,
+                      color: Colors.purpleAccent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => _showModePicker(context, controller),
+                    icon: const Icon(Icons.tune, color: Colors.white70),
+                    tooltip: "Change Mode",
+                  ),
+                  IconButton(
+                    onPressed: () => controller.clearCanvas(),
+                    icon: const Icon(Icons.refresh, color: Colors.white70),
+                    tooltip: "Clear Canvas",
+                  ),
+                ],
+              ),
+            ],
+          ),
+          if (controller.currentMode == GameMode.challenge) ...[
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "FIND THE RECIPE: ",
+                    style: GoogleFonts.outfit(color: Colors.white54, fontSize: 12),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    controller.challengeTarget ?? "?",
+                    style: const TextStyle(fontSize: 32),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _showModePicker(BuildContext context, GameController controller) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF16161C),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Text(
-                "Emoji Alchemy",
+                "Select Game Mode",
                 style: GoogleFonts.outfit(
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              IconButton(
-                onPressed: () => controller.clearCanvas(),
-                icon: const Icon(Icons.refresh, color: Colors.white70),
-                tooltip: "Clear Canvas",
+              const SizedBox(height: 24),
+              _ModeTile(
+                title: "Sandbox",
+                subtitle: "Unlimited creativity. Everything is unlocked.",
+                icon: Icons.auto_awesome,
+                selected: controller.currentMode == GameMode.sandbox,
+                onTap: () {
+                  controller.setMode(GameMode.sandbox);
+                  Navigator.pop(context);
+                },
+              ),
+              _ModeTile(
+                title: "Adventure",
+                subtitle: "Standard discovery. Start from nothing.",
+                icon: Icons.explore,
+                selected: controller.currentMode == GameMode.adventure,
+                onTap: () {
+                  controller.setMode(GameMode.adventure);
+                  Navigator.pop(context);
+                },
+              ),
+              _ModeTile(
+                title: "Challenge",
+                subtitle: "The ultimate test. Form the target emoji.",
+                icon: Icons.psychology,
+                selected: controller.currentMode == GameMode.challenge,
+                onTap: () {
+                  controller.setMode(GameMode.challenge);
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Discovered: $discoveredCount/$total",
-                          style: GoogleFonts.outfit(
-                            color: Colors.white70,
-                            fontSize: 14,
-                          ),
-                        ),
-                        Text(
-                          "${(progress * 100).toInt()}%",
-                          style: GoogleFonts.outfit(
-                            color: Colors.white70,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: progress,
-                        backgroundColor: Colors.white10,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          HSLColor.fromAHSL(1.0, (progress * 120), 0.7, 0.5).toColor(),
-                        ),
-                        minHeight: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              _HintButton(controller: controller),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
+    );
+  }
+}
+
+class _ModeTile extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _ModeTile({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      leading: Icon(icon, color: selected ? Colors.purpleAccent : Colors.white30),
+      title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      subtitle: Text(subtitle, style: const TextStyle(color: Colors.white30, fontSize: 12)),
+      trailing: selected ? const Icon(Icons.check_circle, color: Colors.purpleAccent) : null,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      tileColor: selected ? Colors.purple.withOpacity(0.1) : Colors.transparent,
     );
   }
 }

@@ -59,19 +59,10 @@ class GameScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background Glow
+          // Matte Dark Background
           Positioned.fill(
             child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.topCenter,
-                  radius: 1.2,
-                  colors: [
-                    Colors.purple.withOpacity(0.1),
-                    Colors.black,
-                  ],
-                ),
-              ),
+              color: const Color(0xFF0F0F12),
             ),
           ),
           Column(
