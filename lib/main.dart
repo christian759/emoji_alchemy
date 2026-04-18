@@ -69,7 +69,12 @@ class GameScreen extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final maxTrayHeight = math.max(64.0, constraints.maxHeight - 140.0);
+          final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+          final reservedPlayAreaHeight = keyboardVisible ? 220.0 : 140.0;
+          final maxTrayHeight = math.max(
+            64.0,
+            constraints.maxHeight - reservedPlayAreaHeight,
+          );
           return Stack(
             children: [
               // ── Full-screen play area + bottom tray ────────────

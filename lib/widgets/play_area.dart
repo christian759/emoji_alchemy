@@ -87,7 +87,8 @@ class _PlayAreaState extends State<PlayArea> {
           onAcceptWithDetails: (details) {
             final box = context.findRenderObject() as RenderBox;
             final localPos = box.globalToLocal(details.offset);
-            controller.addEmojiToCanvas(details.data, localPos);
+            const emojiHalfSize = Offset(34, 36);
+            controller.addEmojiToCanvas(details.data, localPos - emojiHalfSize);
           },
           builder: (context, candidateData, rejectedData) {
             return Stack(
@@ -114,9 +115,16 @@ class _PlayAreaState extends State<PlayArea> {
                       onDragEnd: (details) {
                         final box = context.findRenderObject() as RenderBox;
                         final localPos = box.globalToLocal(details.offset);
+                        const emojiHalfSize = Offset(34, 36);
                         final clamped = Offset(
-                          localPos.dx.clamp(0.0, box.size.width - 68),
-                          localPos.dy.clamp(0.0, box.size.height - 72),
+                          (localPos.dx - emojiHalfSize.dx).clamp(
+                            0.0,
+                            box.size.width - 68,
+                          ),
+                          (localPos.dy - emojiHalfSize.dy).clamp(
+                            0.0,
+                            box.size.height - 72,
+                          ),
                         );
                         controller.updateEmojiPosition(item.id, clamped);
                         controller.checkCollision(
