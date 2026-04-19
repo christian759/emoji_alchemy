@@ -151,19 +151,59 @@ func _win_game(msg: String):
 	# Here we could pop up a dialog
 	print(msg)
 
-func _pick_random_target():
-	# Pick a recipe result that isn't discovered yet or just a random one from combinations
-	var all_results = []
-	for e1 in RecipeManager.combinations:
-		for e2 in RecipeManager.combinations[e1]:
-			all_results.append(RecipeManager.combinations[e1][e2])
+func _spawn_on_board(emoji: String, pos: Vector2 = Vector2.ZERO):
+	var piece = preload("res://emoji_piece.tscn").instantiate()
+	piece.set_emoji(emoji, false)
+	board_area.add_child(piece)
 	
-	if all_results.size() > 0:
-		target_emoji = all_results.pick_random()
+	if pos == Vector2.ZERO:
+		# Center spawn (keyboard)
+		var random_offset = Vector2(randf_range(-100, 100), randf_range(-100, 100))
+		piece.position = (board_area.size / 2.0) + random_offset - (piece.size / 2.0)
+	else:
+		# Specific position (merge)
+		piece.position = pos - piece.size / 2.0
+	
+	# Bounce/Pop effect on spawn is already in emoji_piece.gd _ready()
 
-func _spawn_on_board(emoji: String):
-	var new_piece = preload("res://emoji_piece.tscn").instantiate()
-	new_piece.set_emoji(emoji, false)
-	board_area.add_child(new_piece)
-	var random_offset = Vector2(randf_range(-100, 100), randf_range(-100, 100))
-	new_piece.position = (board_area.size / 2.0) + random_offset - (new_piece.size / 2.0)
+func handle_merge(result: String, pos: Vector2):
+	# 1. Particles
+	var particles = %MergeParticles
+	particles.global_position = pos
+	particles.emitting = true
+	
+	# 2. Spawn result
+	_spawn_on_board(result, pos)
+	
+	# 3. Shake
+	screen_shake(0.2, 5.0)
+
+func screen_shake(duration: float, intensity: float):
+	var original_pos = position
+	var tween = create_tween()
+	for i in range(5):
+		var offset = Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity))
+		tween.tween_property(self, "position", original_pos + offset, duration / 10.0)
+		tween.tween_property(self, "position", original_pos, duration / 10.0)
+
+func _on_sequence_discovered(emoji: String):
+	if current_mode == GameMode.BLITZ:
+		blitz_discoveries += 1
+		_update_status()
+	
+	if current_mode == GameMode.TARGET and emoji == target_emoji:
+		_win_game("Target Reached! You found " + emoji)
+	
+	# Discovery Juice
+	_discovery_flash()
+	screen_shake(0.4, 12.0) # Bigger shake for new stuff
+	
+	_populate_inventory()
+
+func _discovery_flash():
+	# Simple flash effect by modulating the background or a dedicated overlay
+	var bg = $Background
+	var original_color = bg.color
+	var tween = create_tween()
+	tween.tween_property(bg, "color", Color.WHITE, 0.1)
+	tween.tween_property(bg, "color", original_color, 0.4)

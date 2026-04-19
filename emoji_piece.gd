@@ -8,6 +8,14 @@ var is_inventory_item: bool = false
 func _ready():
 	label.text = emoji_string
 	_setup_style()
+	
+	# Pop-in animation
+	scale = Vector2.ZERO
+	var tween = create_tween()
+	tween.tween_property(self, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 
 func set_emoji(emoji: String, inventory: bool = false):
 	emoji_string = emoji
@@ -17,25 +25,39 @@ func set_emoji(emoji: String, inventory: bool = false):
 
 func _setup_style():
 	var style = StyleBoxFlat.new()
-	style.bg_color = Color(1.0, 1.0, 1.0, 0.9)
-	style.corner_radius_top_left = 20
-	style.corner_radius_top_right = 20
-	style.corner_radius_bottom_left = 20
-	style.corner_radius_bottom_right = 20
-	style.shadow_color = Color(0, 0, 0, 0.1)
-	style.shadow_size = 10
+	# Glassmorphism: semi-transparent white with a strong border
+	style.bg_color = Color(1.0, 1.0, 1.0, 0.15)
+	style.border_width_left = 2
+	style.border_width_top = 2
+	style.border_width_right = 2
+	style.border_width_bottom = 2
+	style.border_color = Color(1.0, 1.0, 1.0, 0.3)
+	style.corner_radius_top_left = 24
+	style.corner_radius_top_right = 24
+	style.corner_radius_bottom_left = 24
+	style.corner_radius_bottom_right = 24
+	style.shadow_color = Color(0, 0, 0, 0.2)
+	style.shadow_size = 15
 	add_theme_stylebox_override("panel", style)
 	
-	# Give the control a predictable size
-	custom_minimum_size = Vector2(100, 100)
-	size = Vector2(100, 100)
+	custom_minimum_size = Vector2(90, 90)
+	size = Vector2(90, 90)
 	pivot_offset = size / 2.0
 
+func _on_mouse_entered():
+	var tween = create_tween()
+	tween.tween_property(self, "scale", Vector2(1.15, 1.15), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	modulate = Color(1.1, 1.1, 1.2) # Subtle glow
+
+func _on_mouse_exited():
+	var tween = create_tween()
+	tween.tween_property(self, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	modulate = Color.WHITE
+
 func _get_drag_data(at_position: Vector2):
-	# Create a preview
 	var preview = preload("res://emoji_piece.tscn").instantiate()
 	preview.set_emoji(emoji_string, false)
-	preview.modulate.a = 0.8
+	preview.modulate.a = 0.6
 	var c = Control.new()
 	c.add_child(preview)
 	preview.position = -preview.size / 2
@@ -47,7 +69,6 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if typeof(data) == TYPE_DICTIONARY and data.has("type") and data["type"] == "emoji":
 		var dragged_emoji = data["emoji"]
 		var source = data["source_node"]
-		# In this game loop, if dragged item matches this item, it can drop
 		if source != self and RecipeManager.can_combine(emoji_string, dragged_emoji):
 			return true
 	return false
@@ -56,13 +77,11 @@ func _drop_data(at_position: Vector2, data: Variant):
 	var dragged_emoji = data["emoji"]
 	var result = RecipeManager.combine(emoji_string, dragged_emoji)
 	if result != "":
-		# Spawn new emoji here
-		var new_piece = preload("res://emoji_piece.tscn").instantiate()
-		new_piece.set_emoji(result, false)
-		new_piece.position = position
-		get_parent().add_child(new_piece)
+		# Signal the main controller to handle the effects
+		var main = get_tree().root.get_child(0)
+		if main.has_method("handle_merge"):
+			main.handle_merge(result, global_position + size/2.0)
 		
-		# Destroy sender (if not coming from inventory) and receiver
 		if not data["is_inventory"] and is_instance_valid(data["source_node"]):
 			data["source_node"].queue_free()
 		queue_free()
