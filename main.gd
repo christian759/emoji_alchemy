@@ -1,10 +1,21 @@
 extends Control
 
-@onready var inventory_box = $VBoxContainer/InventoryPanel/ScrollContainer/MarginContainer/InventoryBox
+@onready var inventory_box = %InventoryBox
 @onready var board_area = $VBoxContainer/BoardArea
 @onready var keyboard_alchemy = %KeyboardAlchemy
+@onready var category_tabs = %CategoryTabs
+@onready var mode_selector = %ModeSelector
+@onready var game_status = %GameStatus
+@onready var timer = $Timer
 
-# Simple mapping for common names to emojis
+enum GameMode { SANDBOX, BLITZ, TARGET }
+
+var current_mode = GameMode.SANDBOX
+var search_query: String = ""
+var selected_category: String = "All"
+var target_emoji: String = ""
+var blitz_discoveries: int = 0
+
 var emoji_names: Dictionary = {
 	"fire": "🔥", "water": "💧", "earth": "🌍", "wind": "💨",
 	"lava": "🌋", "steam": "💨", "seed": "🌱", "tree": "🌳",
@@ -13,72 +24,146 @@ var emoji_names: Dictionary = {
 }
 
 func _ready():
+	_setup_ui()
 	_populate_inventory()
 	RecipeManager.sequence_discovered.connect(_on_sequence_discovered)
 	keyboard_alchemy.text_submitted.connect(_on_keyboard_alchemy_submitted)
+	keyboard_alchemy.text_changed.connect(_on_search_text_changed)
+	category_tabs.tab_changed.connect(_on_category_tab_changed)
+	mode_selector.item_selected.connect(_on_mode_selected)
+	timer.timeout.connect(_on_timer_timeout)
+
+func _setup_ui():
+	# Populate Category Tabs
+	category_tabs.clear_tabs()
+	category_tabs.add_tab("All")
+	for cat in RecipeManager.categories:
+		category_tabs.add_tab(cat)
+	
+	mode_selector.selected = 0
+	_set_mode(GameMode.SANDBOX)
 
 func _populate_inventory():
 	for child in inventory_box.get_children():
 		child.queue_free()
 		
-	for emoji in RecipeManager.discovered_emojis:
-		_add_to_inventory(emoji)
+	var filter_list = RecipeManager.discovered_emojis
+	
+	for emoji in filter_list:
+		if _matches_filter(emoji):
+			_add_to_inventory_ui(emoji)
 
-func _add_to_inventory(emoji: String):
+func _matches_filter(emoji: String) -> bool:
+	if selected_category != "All" and RecipeManager.get_category(emoji) != selected_category:
+		return false
+	if not search_query.is_empty():
+		# Simple check: does emoji symbol match or name match (if we had a full name map)
+		if not emoji.contains(search_query):
+			var found_in_name = false
+			for name in emoji_names:
+				if emoji_names[name] == emoji and name.contains(search_query):
+					found_in_name = true
+					break
+			if not found_in_name:
+				return false
+	return true
+
+func _add_to_inventory_ui(emoji: String):
 	var piece = preload("res://emoji_piece.tscn").instantiate()
 	inventory_box.add_child(piece)
 	piece.set_emoji(emoji, true)
 
-func _on_sequence_discovered(emoji: String):
-	_add_to_inventory(emoji)
+# ── Signals ───────────────────────────────────────────────────
+
+func _on_category_tab_changed(tab: int):
+	selected_category = category_tabs.get_tab_title(tab)
+	_populate_inventory()
+
+func _on_search_text_changed(new_text: String):
+	search_query = new_text.strip_edges().to_lower()
+	_populate_inventory()
 
 func _on_keyboard_alchemy_submitted(text: String):
 	keyboard_alchemy.clear()
 	var clean_text = text.strip_edges().to_lower()
-	if clean_text.is_empty():
-		return
+	if clean_text.is_empty(): return
 
-	var emojis_to_spawn: Array[String] = []
-	
-	# 1. Try to find known emoji names
 	if emoji_names.has(clean_text):
-		emojis_to_spawn.append(emoji_names[clean_text])
-	else:
-		# 2. Try to extract direct emojis from string
-		# We'll treat every character as a potential emoji if it's not alphanumeric
-		# but better yet, we'll just check if the string itself IS an emoji
-		# or contains emojis. For simplicity in this demo, we'll split by chars
-		# and check discovered_emojis or pool.
-		
-		# If user typed multiple emojis like 🔥💧
-		var chars = clean_text.split("")
-		for c in chars:
-			# Very basic check: is it non-alphanumeric? (Unicode emojis are usually in high ranges)
-			if c.unicode_at(0) > 127: 
-				emojis_to_spawn.append(c)
+		_spawn_on_board(emoji_names[clean_text])
+	elif clean_text.unicode_at(0) > 127:
+		# Direct emoji submission
+		_spawn_on_board(clean_text)
 
-	if emojis_to_spawn.is_empty():
-		return
+func _on_sequence_discovered(emoji: String):
+	if current_mode == GameMode.BLITZ:
+		blitz_discoveries += 1
+		_update_status()
+	
+	if current_mode == GameMode.TARGET and emoji == target_emoji:
+		_win_game("Target Reached! You found " + emoji)
+	
+	_populate_inventory()
 
-	# If they typed two emojis, try to combine them immediately
-	if emojis_to_spawn.size() >= 2:
-		var e1 = emojis_to_spawn[0]
-		var e2 = emojis_to_spawn[1]
-		var result = RecipeManager.combine(e1, e2)
-		if result != "":
-			_spawn_on_board(result)
-		else:
-			# Couldn't combine, just spawn them
-			for e in emojis_to_spawn:
-				_spawn_on_board(e)
-	else:
-		# Only one emoji, just spawn it
-		_spawn_on_board(emojis_to_spawn[0])
+# ── Game Modes ────────────────────────────────────────────────
+
+func _on_mode_selected(index: int):
+	_set_mode(index as GameMode)
+
+func _set_mode(mode: GameMode):
+	current_mode = mode
+	timer.stop()
+	blitz_discoveries = 0
+	target_emoji = ""
+	
+	match current_mode:
+		GameMode.SANDBOX:
+			game_status.text = "Mode: Sandbox"
+		GameMode.BLITZ:
+			timer.start(180) # 3 minutes
+			_update_status()
+		GameMode.TARGET:
+			_pick_random_target()
+			_update_status()
+	
+	# Clear board for fresh mode start
+	for piece in board_area.get_children():
+		piece.queue_free()
+
+func _update_status():
+	match current_mode:
+		GameMode.BLITZ:
+			game_status.text = "Blitz: %d discoveries | Time: %d s" % [blitz_discoveries, int(timer.time_left)]
+		GameMode.TARGET:
+			game_status.text = "Goal: Find %s" % target_emoji
+		GameMode.SANDBOX:
+			game_status.text = "Mode: Sandbox"
+
+func _process(_delta):
+	if current_mode == GameMode.BLITZ and not timer.is_stopped():
+		_update_status()
+
+func _on_timer_timeout():
+	if current_mode == GameMode.BLITZ:
+		_win_game("Blitz Finished! You found %d new emojis." % blitz_discoveries)
+
+func _win_game(msg: String):
+	game_status.text = msg
+	# Here we could pop up a dialog
+	print(msg)
+
+func _pick_random_target():
+	# Pick a recipe result that isn't discovered yet or just a random one from combinations
+	var all_results = []
+	for e1 in RecipeManager.combinations:
+		for e2 in RecipeManager.combinations[e1]:
+			all_results.append(RecipeManager.combinations[e1][e2])
+	
+	if all_results.size() > 0:
+		target_emoji = all_results.pick_random()
 
 func _spawn_on_board(emoji: String):
 	var new_piece = preload("res://emoji_piece.tscn").instantiate()
 	new_piece.set_emoji(emoji, false)
 	board_area.add_child(new_piece)
-	# Random position in the center area
 	var random_offset = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 	new_piece.position = (board_area.size / 2.0) + random_offset - (new_piece.size / 2.0)

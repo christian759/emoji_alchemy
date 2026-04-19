@@ -12,6 +12,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main")
 
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -19,7 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.95, 0.95, 0.95, 1)
+color = Color(0.92, 0.93, 0.95, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -28,6 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
 
 [node name="TopMargin" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -36,13 +40,37 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 10
 
-[node name="KeyboardAlchemy" type="LineEdit" parent="VBoxContainer/TopMargin"]
+[node name="HBox" type="HBoxContainer" parent="VBoxContainer/TopMargin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ModeSelector" type="OptionButton" parent="VBoxContainer/TopMargin/HBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "Sandbox"
+popup/item_0/id = 0
+popup/item_1/text = "Blitz (3 min)"
+popup/item_1/id = 1
+popup/item_2/text = "Target Hunt"
+popup/item_2/id = 2
+
+[node name="KeyboardAlchemy" type="LineEdit" parent="VBoxContainer/TopMargin/HBox"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
-placeholder_text = "Type emoji names or symbols (e.g. fire, 💧)..."
+placeholder_text = "Search or type symbols (e.g. fire, 💧)..."
 alignment = 1
 clear_button_enabled = true
+
+[node name="GameStatus" type="Label" parent="VBoxContainer/TopMargin/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+text = "Mode: Sandbox"
 
 [node name="BoardArea" type="Control" parent="VBoxContainer"]
 layout_mode = 2
@@ -50,15 +78,26 @@ size_flags_vertical = 3
 script = ExtResource("2_board")
 
 [node name="InventoryPanel" type="PanelContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 150)
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/InventoryPanel"]
+[node name="VBox" type="VBoxContainer" parent="VBoxContainer/InventoryPanel"]
 layout_mode = 2
-horizontal_scroll_mode = 2
-vertical_scroll_mode = 0
+theme_override_constants/separation = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InventoryPanel/ScrollContainer"]
+[node name="CategoryTabs" type="TabBar" parent="VBoxContainer/InventoryPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+tab_count = 1
+tab_0/text = "All"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/InventoryPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InventoryPanel/VBox/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -67,6 +106,10 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="InventoryBox" type="HBoxContainer" parent="VBoxContainer/InventoryPanel/ScrollContainer/MarginContainer"]
+[node name="InventoryBox" type="GridContainer" parent="VBoxContainer/InventoryPanel/VBox/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 20
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 6

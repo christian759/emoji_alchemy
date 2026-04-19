@@ -3,6 +3,8 @@ extends Node
 var combinations: Dictionary = {}
 var base_emojis: Array = []
 var discovered_emojis: Array = []
+var emoji_to_cat: Dictionary = {}
+var categories: Array = []
 
 signal sequence_discovered(emoji: String)
 
@@ -26,26 +28,27 @@ func load_data():
 	if error == OK:
 		var data = json.get_data()
 		base_emojis = data.get("base_emojis", ["💧", "🔥", "🌍", "💨"])
+		emoji_to_cat = data.get("emoji_to_cat", {})
+		categories = data.get("categories", ["Misc"])
 		var recipes = data.get("recipes", {})
 		
-		# Convert flat comma-separated recipes to nested dictionary for faster lookups
+		combinations.clear()
 		for key in recipes.keys():
 			var parts = key.split(",")
 			if parts.size() == 2:
-				var e1 = parts[0]
-				var e2 = parts[1]
-				var result = recipes[key]
-				
-				_add_combination(e1, e2, result)
-				_add_combination(e2, e1, result) # Ensure commutativity
-		print("Successfully loaded ", recipes.size(), " recipes.")
+				_add_combination(parts[0], parts[1], recipes[key])
+				_add_combination(parts[1], parts[0], recipes[key])
+		print("Successfully loaded ", recipes.size(), " recipes and ", emoji_to_cat.size(), " categories.")
 	else:
-		printerr("JSON Parse Error: ", json.get_error_message(), " at line ", json.get_error_line())
+		printerr("JSON Parse Error: ", json.get_error_message())
 
 func _add_combination(e1: String, e2: String, result: String):
 	if not combinations.has(e1):
 		combinations[e1] = {}
 	combinations[e1][e2] = result
+
+func get_category(emoji: String) -> String:
+	return emoji_to_cat.get(emoji, "Misc")
 
 func can_combine(emoji1: String, emoji2: String) -> bool:
 	return combinations.has(emoji1) and combinations[emoji1].has(emoji2)
