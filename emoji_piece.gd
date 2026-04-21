@@ -77,10 +77,8 @@ func _drop_data(at_position: Vector2, data: Variant):
 	var dragged_emoji = data["emoji"]
 	var result = RecipeManager.combine(emoji_string, dragged_emoji)
 	if result != "":
-		# Signal the main controller to handle the effects
-		var main = get_tree().root.get_child(0)
-		if main.has_method("handle_merge"):
-			main.handle_merge(result, global_position + size/2.0)
+		# Signal via Global Autoload instead of brittle root access
+		RecipeManager.request_merge.emit(result, global_position + size/2.0)
 		
 		if not data["is_inventory"] and is_instance_valid(data["source_node"]):
 			data["source_node"].queue_free()

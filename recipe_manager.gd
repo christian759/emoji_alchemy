@@ -7,6 +7,7 @@ var emoji_to_cat: Dictionary = {}
 var categories: Array = []
 
 signal sequence_discovered(emoji: String)
+signal request_merge(result: String, pos: Vector2)
 
 func _ready():
 	load_data()

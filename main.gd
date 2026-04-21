@@ -20,13 +20,24 @@ var emoji_names: Dictionary = {
 	"fire": "🔥", "water": "💧", "earth": "🌍", "wind": "💨",
 	"lava": "🌋", "steam": "💨", "seed": "🌱", "tree": "🌳",
 	"wave": "🌊", "sun": "☀️", "mountain": "⛰️", "storm": "⛈️",
-	"rainbow": "🌈", "diamond": "💎", "gold": "💰", "life": "🌱"
+	"rainbow": "🌈", "diamond": "💎", "gold": "💰", "life": "🌱",
+	"tornado": "🌪️", "cloud": "☁️", "rain": "🌧️", "lightning": "🌩️",
+	"flower": "🌸", "bear": "🐻", "fish": "🐟", "eagle": "🦅",
+	"hammer": "⚒️", "sword": "🗡️", "computer": "💻", "egg": "🍳",
+	"apple": "🍎", "volcano": "🌋", "ocean": "🌊", "moon": "🌙",
+	"star": "⭐", "rocket": "🚀", "robot": "🤖", "ghost": "👻",
+	"alien": "👽", "heart": "❤️", "pizza": "🍕", "beer": "🍺",
+	"wine": "🍷", "coffee": "☕", "bread": "🍞", "cheese": "🧀",
+	"milk": "🥛", "ice": "🧊", "snow": "❄️", "sun": "☀️",
+	"music": "🎶", "car": "🚗", "plane": "✈️", "ship": "🚢",
+	"house": "🏠", "city": "🏙️", "night": "🌃", "day": "🌅"
 }
 
 func _ready():
 	_setup_ui()
 	_populate_inventory()
 	RecipeManager.sequence_discovered.connect(_on_sequence_discovered)
+	RecipeManager.request_merge.connect(handle_merge)
 	keyboard_alchemy.text_submitted.connect(_on_keyboard_alchemy_submitted)
 	keyboard_alchemy.text_changed.connect(_on_search_text_changed)
 	category_tabs.tab_changed.connect(_on_category_tab_changed)
@@ -90,19 +101,31 @@ func _on_keyboard_alchemy_submitted(text: String):
 
 	if emoji_names.has(clean_text):
 		_spawn_on_board(emoji_names[clean_text])
-	elif clean_text.unicode_at(0) > 127:
+		return
+	
+	# Partial matching
+	for name in emoji_names:
+		if clean_text in name:
+			_spawn_on_board(emoji_names[name])
+			return
+
+	if clean_text.unicode_at(0) > 127:
 		# Direct emoji submission
 		_spawn_on_board(clean_text)
 
-func _on_sequence_discovered(emoji: String):
-	if current_mode == GameMode.BLITZ:
-		blitz_discoveries += 1
-		_update_status()
+	# Implementation of the missing function
+func _pick_random_target():
+	var all_recipes = RecipeManager.combinations.values()
+	var all_results = []
+	for results in all_recipes:
+		for res in results.values():
+			if not all_results.has(res):
+				all_results.append(res)
 	
-	if current_mode == GameMode.TARGET and emoji == target_emoji:
-		_win_game("Target Reached! You found " + emoji)
-	
-	_populate_inventory()
+	if all_results.size() > 0:
+		target_emoji = all_results.pick_random()
+	else:
+		target_emoji = "💎" # Fallback
 
 # ── Game Modes ────────────────────────────────────────────────
 
