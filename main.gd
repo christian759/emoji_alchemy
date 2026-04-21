@@ -78,32 +78,76 @@ func _setup_styles():
 	mat.shader = shader
 	background.material = mat
 	
-	# Common Pixel Style (New Vibrant/Vivid look)
-	var retro_box = StyleBoxFlat.new()
-	retro_box.bg_color = Color(0.12, 0.12, 0.18, 0.95)
-	retro_box.border_width_left = 3
-	retro_box.border_width_top = 3
-	retro_box.border_width_right = 3
-	retro_box.border_width_bottom = 3
-	retro_box.border_color = Color(0.3, 0.3, 0.45, 1.0) # Slightly more color
-	
-	# Beveled depth for panels
-	retro_box.expand_margin_left = 2
-	retro_box.expand_margin_top = 2
-	retro_box.expand_margin_right = 2
-	retro_box.expand_margin_bottom = 2
-	
-	retro_box.set_corner_radius_all(0)
-	
-	# Glow/Shadow
-	retro_box.shadow_color = Color(0, 0, 0, 0.6)
-	retro_box.shadow_size = 0
-	retro_box.shadow_offset = Vector2(6, 6)
+	# Bold Retro Box (6px borders, 8px shadows)
+	var bold_panel = StyleBoxFlat.new()
+	bold_panel.bg_color = Color(0.1, 0.1, 0.15, 0.98)
+	bold_panel.border_width_left = 6
+	bold_panel.border_width_top = 6
+	bold_panel.border_width_right = 6
+	bold_panel.border_width_bottom = 6
+	bold_panel.border_color = Color(0, 0, 0, 1.0)
+	bold_panel.expand_margin_left = 4
+	bold_panel.expand_margin_top = 4
+	bold_panel.expand_margin_right = 4
+	bold_panel.expand_margin_bottom = 4
+	bold_panel.shadow_color = Color(0, 0, 0, 0.7)
+	bold_panel.shadow_offset = Vector2(8, 8)
 	
 	# Apply to panels
-	$Screens/SettingsScreen/Panel.add_theme_stylebox_override("panel", retro_box)
-	$Screens/GameScreen/UI/FloatingHeader/Panel.add_theme_stylebox_override("panel", retro_box)
-	inventory_panel.add_theme_stylebox_override("panel", retro_box)
+	$Screens/SettingsScreen/Panel.add_theme_stylebox_override("panel", bold_panel)
+	$Screens/GameScreen/UI/FloatingHeader/Panel.add_theme_stylebox_override("panel", bold_panel)
+	inventory_panel.add_theme_stylebox_override("panel", bold_panel)
+	
+	# Apply to all buttons
+	_apply_bold_button_style(%BtnSandbox)
+	_apply_bold_button_style(%BtnBlitz)
+	_apply_bold_button_style(%BtnTarget)
+	_apply_bold_button_style(%BtnSettings)
+	_apply_bold_button_style(%BtnBack)
+	_apply_bold_button_style(%BtnExitGame)
+	_apply_bold_button_style(%InventoryToggle)
+	_apply_bold_button_style(%ClearBoard)
+	
+	# Apply to LineEdit and Tabs
+	_apply_bold_input_style(keyboard_alchemy)
+	category_tabs.add_theme_stylebox_override("tab_selected", bold_panel)
+
+func _apply_bold_button_style(btn: Button):
+	var normal = StyleBoxFlat.new()
+	normal.bg_color = Color(0.2, 0.2, 0.3)
+	normal.border_width_left = 4
+	normal.border_width_top = 4
+	normal.border_width_right = 4
+	normal.border_width_bottom = 4
+	normal.border_color = Color(0, 0, 0, 1.0)
+	normal.shadow_offset = Vector2(6, 6)
+	normal.shadow_color = Color(0, 0, 0, 0.5)
+	
+	var hover = normal.duplicate()
+	hover.bg_color = Color(0.3, 0.3, 0.45)
+	
+	var pressed = normal.duplicate()
+	pressed.bg_color = Color(0.1, 0.1, 0.2)
+	pressed.shadow_offset = Vector2(2, 2) # Physical "press down" effect
+	
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	btn.add_theme_font_size_override("font_size", 24)
+	btn.add_theme_color_override("font_shadow_color", Color.BLACK)
+	btn.add_theme_constant_override("shadow_offset_x", 2)
+	btn.add_theme_constant_override("shadow_offset_y", 2)
+
+func _apply_bold_input_style(input: LineEdit):
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.05, 0.1, 1.0)
+	style.border_width_left = 4
+	style.border_width_top = 4
+	style.border_width_right = 4
+	style.border_width_bottom = 4
+	style.border_color = Color(0.5, 0.5, 0.7, 1.0)
+	input.add_theme_stylebox_override("normal", style)
+	input.add_theme_font_size_override("font_size", 18)
 
 func _setup_ui():
 	category_tabs.clear_tabs()

@@ -27,22 +27,32 @@ func _setup_style():
 	var category = RecipeManager.get_category(emoji_string)
 	var base_color = _get_category_color(category)
 	
-	# Apply Shader
+	# Apply Bold Shader
 	var shader = load("res://assets/pixel_beautify.gdshader")
 	var mat = ShaderMaterial.new()
 	mat.shader = shader
 	mat.set_shader_parameter("base_color", base_color)
-	mat.set_shader_parameter("bevel_size", 0.08)
+	mat.set_shader_parameter("bevel_size", 0.12)
 	mat.set_shader_parameter("shine_intensity", 0.0)
 	
 	material = mat
 	
-	# Drop Shadow (Flat hard shadow)
+	# Bold Drop Shadow (Thicker & Darker)
 	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0, 0, 0, 0.4)
+	style.bg_color = Color(0, 0, 0, 0.6)
 	style.set_corner_radius_all(0)
+	style.border_width_left = 6
+	style.border_width_top = 6
+	style.border_width_right = 6
+	style.border_width_bottom = 6
+	style.border_color = Color(0, 0, 0, 1.0) # Solid black border
+	style.expand_margin_left = 2
+	style.expand_margin_top = 2
+	style.expand_margin_right = 2
+	style.expand_margin_bottom = 2
+	
 	style.shadow_size = 0
-	style.shadow_offset = Vector2(4, 4)
+	style.shadow_offset = Vector2(8, 8) # Deep shadow
 	add_theme_stylebox_override("panel", style)
 	
 	custom_minimum_size = Vector2(64, 64)
@@ -50,18 +60,23 @@ func _setup_style():
 	pivot_offset = size / 2.0
 	
 	if label:
-		label.add_theme_font_size_override("font_size", 42)
+		label.add_theme_font_size_override("font_size", 44)
+		label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.8))
+		label.add_theme_constant_override("shadow_offset_x", 3)
+		label.add_theme_constant_override("shadow_offset_y", 3)
+		label.add_theme_constant_override("shadow_outline_size", 6)
 
 func _get_category_color(cat: String) -> Color:
+	# Hyper-Saturated Bold Colors
 	match cat:
-		"Atmosphere": return Color(0.4, 0.6, 0.9)  # Sky Blue
-		"Terrain": return Color(0.6, 0.4, 0.3)     # Earthy Brown
-		"Flora": return Color(0.3, 0.7, 0.3)       # Leaf Green
-		"Fauna": return Color(0.9, 0.7, 0.2)       # Golden Fur
-		"Crafting": return Color(0.5, 0.5, 0.6)    # Metal Gray
-		"Tech": return Color(0.6, 0.3, 0.8)        # Neon Purple
-		"Food": return Color(0.9, 0.3, 0.2)        # Delicious Red
-		_: return Color(0.5, 0.5, 0.5)              # Neutral Gray
+		"Atmosphere": return Color(0.2, 0.6, 1.0) # Vivid Azure
+		"Terrain": return Color(0.8, 0.5, 0.3)    # Bright Terracotta
+		"Flora": return Color(0.1, 0.9, 0.3)      # Electric Green
+		"Fauna": return Color(1.0, 0.8, 0.0)      # Neon Gold
+		"Crafting": return Color(0.7, 0.7, 0.8)   # Solid Steel
+		"Tech": return Color(0.8, 0.1, 1.0)       # Cyber Purple
+		"Food": return Color(1.0, 0.2, 0.2)       # Punchy Red
+		_: return Color(0.6, 0.6, 0.6)             # Bold Gray
 
 func _on_mouse_entered():
 	var tween = create_tween().set_parallel(true)
