@@ -4,13 +4,13 @@ import '../models/combination.dart';
 
 class ElementData {
   static const Map<String, EmojiElement> elements = {
-    // Base
+    // Base Elements
     'fire': EmojiElement(id: 'fire', emoji: '🔥', name: 'Fire', category: ElementCategory.base, isBase: true),
     'water': EmojiElement(id: 'water', emoji: '💧', name: 'Water', category: ElementCategory.base, isBase: true),
     'earth': EmojiElement(id: 'earth', emoji: '🌍', name: 'Earth', category: ElementCategory.base, isBase: true),
     'wind': EmojiElement(id: 'wind', emoji: '💨', name: 'Wind', category: ElementCategory.base, isBase: true),
 
-    // Tier 1
+    // Nature / Environment
     'steam': EmojiElement(id: 'steam', emoji: '💨', name: 'Steam', category: ElementCategory.weather),
     'plant': EmojiElement(id: 'plant', emoji: '🌱', name: 'Plant', category: ElementCategory.nature),
     'lava': EmojiElement(id: 'lava', emoji: '🌋', name: 'Lava', category: ElementCategory.nature),
@@ -18,132 +18,352 @@ class ElementData {
     'ocean': EmojiElement(id: 'ocean', emoji: '🌊', name: 'Ocean', category: ElementCategory.nature),
     'mountain': EmojiElement(id: 'mountain', emoji: '⛰️', name: 'Mountain', category: ElementCategory.nature),
     'sun': EmojiElement(id: 'sun', emoji: '☀️', name: 'Sun', category: ElementCategory.space),
-
-    // Tier 2
     'tree': EmojiElement(id: 'tree', emoji: '🌳', name: 'Tree', category: ElementCategory.nature),
     'wood': EmojiElement(id: 'wood', emoji: '🪵', name: 'Wood', category: ElementCategory.nature),
     'rainbow': EmojiElement(id: 'rainbow', emoji: '🌈', name: 'Rainbow', category: ElementCategory.weather),
-    'eagle': EmojiElement(id: 'eagle', emoji: '🦅', name: 'Eagle', category: ElementCategory.animals),
     'mushroom': EmojiElement(id: 'mushroom', emoji: '🍄', name: 'Mushroom', category: ElementCategory.nature),
-    'house': EmojiElement(id: 'house', emoji: '🏠', name: 'House', category: ElementCategory.human),
     'sunflower': EmojiElement(id: 'sunflower', emoji: '🌻', name: 'Sunflower', category: ElementCategory.nature),
     'rock': EmojiElement(id: 'rock', emoji: '🪨', name: 'Rock', category: ElementCategory.nature),
     'hurricane': EmojiElement(id: 'hurricane', emoji: '🌀', name: 'Hurricane', category: ElementCategory.weather),
-
-    // Tier 3
-    'city': EmojiElement(id: 'city', emoji: '🏙️', name: 'City', category: ElementCategory.human),
     'forest': EmojiElement(id: 'forest', emoji: '🌲', name: 'Forest', category: ElementCategory.nature),
-    'owl': EmojiElement(id: 'owl', emoji: '🦉', name: 'Owl', category: ElementCategory.animals),
     'diamond': EmojiElement(id: 'diamond', emoji: '💎', name: 'Diamond', category: ElementCategory.nature),
     'island': EmojiElement(id: 'island', emoji: '🏝️', name: 'Island', category: ElementCategory.nature),
-    'honey': EmojiElement(id: 'honey', emoji: '🍯', name: 'Honey', category: ElementCategory.food),
+    'rain': EmojiElement(id: 'rain', emoji: '🌧️', name: 'Rain', category: ElementCategory.weather),
+    'ash': EmojiElement(id: 'ash', emoji: '🌫️', name: 'Ash', category: ElementCategory.nature),
+    'smoke': EmojiElement(id: 'smoke', emoji: '💨', name: 'Smoke', category: ElementCategory.weather),
+    'dust': EmojiElement(id: 'dust', emoji: '🏜️', name: 'Dust', category: ElementCategory.nature),
+    'sand': EmojiElement(id: 'sand', emoji: '⛱️', name: 'Sand', category: ElementCategory.nature),
+    'glass': EmojiElement(id: 'glass', emoji: '🪟', name: 'Glass', category: ElementCategory.human),
+    'snow': EmojiElement(id: 'snow', emoji: '❄️', name: 'Snow', category: ElementCategory.weather),
+    'ice': EmojiElement(id: 'ice', emoji: '🧊', name: 'Ice', category: ElementCategory.nature),
+    'lightning': EmojiElement(id: 'lightning', emoji: '⚡', name: 'Lightning', category: ElementCategory.weather),
+    'storm': EmojiElement(id: 'storm', emoji: '⛈️', name: 'Storm', category: ElementCategory.weather),
+    'moon': EmojiElement(id: 'moon', emoji: '🌙', name: 'Moon', category: ElementCategory.space),
+    'mud': EmojiElement(id: 'mud', emoji: '💩', name: 'Mud', category: ElementCategory.nature),
+    'swamp': EmojiElement(id: 'swamp', emoji: '🐊', name: 'Swamp', category: ElementCategory.nature),
+    'clay': EmojiElement(id: 'clay', emoji: '🏺', name: 'Clay', category: ElementCategory.nature),
+    'brick': EmojiElement(id: 'brick', emoji: '🧱', name: 'Brick', category: ElementCategory.human),
+    'wall': EmojiElement(id: 'wall', emoji: '🧱', name: 'Wall', category: ElementCategory.human),
+
+    // Fauna / Animals
+    'eagle': EmojiElement(id: 'eagle', emoji: '🦅', name: 'Eagle', category: ElementCategory.animals),
+    'owl': EmojiElement(id: 'owl', emoji: '🦉', name: 'Owl', category: ElementCategory.animals),
+    'bee': EmojiElement(id: 'bee', emoji: '🐝', name: 'Bee', category: ElementCategory.animals),
+    'bear': EmojiElement(id: 'bear', emoji: '🐻', name: 'Bear', category: ElementCategory.animals),
+    'sheep': EmojiElement(id: 'sheep', emoji: '🐑', name: 'Sheep', category: ElementCategory.animals),
+    'life': EmojiElement(id: 'life', emoji: '🧬', name: 'Life', category: ElementCategory.magic),
+    'egg': EmojiElement(id: 'egg', emoji: '🥚', name: 'Egg', category: ElementCategory.animals),
+    'bird': EmojiElement(id: 'bird', emoji: '🐦', name: 'Bird', category: ElementCategory.animals),
+    'fish': EmojiElement(id: 'fish', emoji: '🐟', name: 'Fish', category: ElementCategory.animals),
+    'shark': EmojiElement(id: 'shark', emoji: '🦈', name: 'Shark', category: ElementCategory.animals),
+    'whale': EmojiElement(id: 'whale', emoji: '🐋', name: 'Whale', category: ElementCategory.animals),
+    'dolphin': EmojiElement(id: 'dolphin', emoji: '🐬', name: 'Dolphin', category: ElementCategory.animals),
+    'octopus': EmojiElement(id: 'octopus', emoji: '🐙', name: 'Octopus', category: ElementCategory.animals),
+    'crab': EmojiElement(id: 'crab', emoji: '🦀', name: 'Crab', category: ElementCategory.animals),
+    'wolf': EmojiElement(id: 'wolf', emoji: '🐺', name: 'Wolf', category: ElementCategory.animals),
+    'dog': EmojiElement(id: 'dog', emoji: '🐶', name: 'Dog', category: ElementCategory.animals),
+    'cat': EmojiElement(id: 'cat', emoji: '🐱', name: 'Cat', category: ElementCategory.animals),
+    'lion': EmojiElement(id: 'lion', emoji: '🦁', name: 'Lion', category: ElementCategory.animals),
+    'tiger': EmojiElement(id: 'tiger', emoji: '🐯', name: 'Tiger', category: ElementCategory.animals),
+    'monkey': EmojiElement(id: 'monkey', emoji: '🐒', name: 'Monkey', category: ElementCategory.animals),
+    'snake': EmojiElement(id: 'snake', emoji: '🐍', name: 'Snake', category: ElementCategory.animals),
+    'frog': EmojiElement(id: 'frog', emoji: '🐸', name: 'Frog', category: ElementCategory.animals),
+    'spider': EmojiElement(id: 'spider', emoji: '🕷️', name: 'Spider', category: ElementCategory.animals),
+    'butterfly': EmojiElement(id: 'butterfly', emoji: '🦋', name: 'Butterfly', category: ElementCategory.animals),
+    'bug': EmojiElement(id: 'bug', emoji: '🐛', name: 'Bug', category: ElementCategory.animals),
+    'ant': EmojiElement(id: 'ant', emoji: '🐜', name: 'Ant', category: ElementCategory.animals),
+    'horse': EmojiElement(id: 'horse', emoji: '🐴', name: 'Horse', category: ElementCategory.animals),
+    'cow': EmojiElement(id: 'cow', emoji: '🐮', name: 'Cow', category: ElementCategory.animals),
+    'pig': EmojiElement(id: 'pig', emoji: '🐷', name: 'Pig', category: ElementCategory.animals),
+    'chicken': EmojiElement(id: 'chicken', emoji: '🐔', name: 'Chicken', category: ElementCategory.animals),
+    'mouse': EmojiElement(id: 'mouse', emoji: '🐭', name: 'Mouse', category: ElementCategory.animals),
+
+    // Human / Society
+    'house': EmojiElement(id: 'house', emoji: '🏠', name: 'House', category: ElementCategory.human),
+    'city': EmojiElement(id: 'city', emoji: '🏙️', name: 'City', category: ElementCategory.human),
     'ring': EmojiElement(id: 'ring', emoji: '💍', name: 'Ring', category: ElementCategory.human),
     'night_city': EmojiElement(id: 'night_city', emoji: '🌆', name: 'Night City', category: ElementCategory.human),
+    'human': EmojiElement(id: 'human', emoji: '👤', name: 'Human', category: ElementCategory.human),
+    'skull': EmojiElement(id: 'skull', emoji: '💀', name: 'Skull', category: ElementCategory.human),
+    'music': EmojiElement(id: 'music', emoji: '🎵', name: 'Music', category: ElementCategory.human),
+    'sleep': EmojiElement(id: 'sleep', emoji: '💤', name: 'Sleep', category: ElementCategory.human),
+    'teddy_bear': EmojiElement(id: 'teddy_bear', emoji: '🧸', name: 'Teddy Bear', category: ElementCategory.human),
+    'rock_music': EmojiElement(id: 'rock_music', emoji: '🎸', name: 'Rock Music', category: ElementCategory.human),
+    'dream': EmojiElement(id: 'dream', emoji: '💭', name: 'Dream', category: ElementCategory.human),
+    'deep_sleep': EmojiElement(id: 'deep_sleep', emoji: '😴', name: 'Deep Sleep', category: ElementCategory.human),
+    'love': EmojiElement(id: 'love', emoji: '❤️', name: 'Love', category: ElementCategory.human),
+    'heart': EmojiElement(id: 'heart', emoji: '💖', name: 'Heart', category: ElementCategory.human),
+    'family': EmojiElement(id: 'family', emoji: '👨‍👩‍👧‍👦', name: 'Family', category: ElementCategory.human),
+    'baby': EmojiElement(id: 'baby', emoji: '👶', name: 'Baby', category: ElementCategory.human),
+    'farmer': EmojiElement(id: 'farmer', emoji: '🧑‍🌾', name: 'Farmer', category: ElementCategory.human),
+    'warrior': EmojiElement(id: 'warrior', emoji: '⚔️', name: 'Warrior', category: ElementCategory.human),
+    'king': EmojiElement(id: 'king', emoji: '👑', name: 'King', category: ElementCategory.human),
+    'village': EmojiElement(id: 'village', emoji: '🏘️', name: 'Village', category: ElementCategory.human),
+    'castle': EmojiElement(id: 'castle', emoji: '🏰', name: 'Castle', category: ElementCategory.human),
+
+    // Technology
     'airplane': EmojiElement(id: 'airplane', emoji: '✈️', name: 'Airplane', category: ElementCategory.technology),
+    'tool': EmojiElement(id: 'tool', emoji: '⚒️', name: 'Tool', category: ElementCategory.technology),
+    'sword': EmojiElement(id: 'sword', emoji: '🗡️', name: 'Sword', category: ElementCategory.technology),
+    'gun': EmojiElement(id: 'gun', emoji: '🔫', name: 'Gun', category: ElementCategory.technology),
+    'shield': EmojiElement(id: 'shield', emoji: '🛡️', name: 'Shield', category: ElementCategory.technology),
+    'wheel': EmojiElement(id: 'wheel', emoji: '🛞', name: 'Wheel', category: ElementCategory.technology),
+    'car': EmojiElement(id: 'car', emoji: '🚗', name: 'Car', category: ElementCategory.technology),
+    'train': EmojiElement(id: 'train', emoji: '🚂', name: 'Train', category: ElementCategory.technology),
+    'boat': EmojiElement(id: 'boat', emoji: '🛶', name: 'Boat', category: ElementCategory.technology),
+    'ship': EmojiElement(id: 'ship', emoji: '🚢', name: 'Ship', category: ElementCategory.technology),
+    'submarine': EmojiElement(id: 'submarine', emoji: '🛥️', name: 'Submarine', category: ElementCategory.technology),
+    'computer': EmojiElement(id: 'computer', emoji: '💻', name: 'Computer', category: ElementCategory.technology),
+    'robot': EmojiElement(id: 'robot', emoji: '🤖', name: 'Robot', category: ElementCategory.technology),
+    'internet': EmojiElement(id: 'internet', emoji: '🌐', name: 'Internet', category: ElementCategory.technology),
+    'phone': EmojiElement(id: 'phone', emoji: '📱', name: 'Phone', category: ElementCategory.technology),
+    'battery': EmojiElement(id: 'battery', emoji: '🔋', name: 'Battery', category: ElementCategory.technology),
+    'lightbulb': EmojiElement(id: 'lightbulb', emoji: '💡', name: 'Idea', category: ElementCategory.technology),
 
-    // Extra needed for Tier 3
-    'bee': EmojiElement(id: 'bee', emoji: '🐝', name: 'Bee', category: ElementCategory.animals),
-    'rain': EmojiElement(id: 'rain', emoji: '🌧️', name: 'Rain', category: ElementCategory.weather),
+    // Food
+    'honey': EmojiElement(id: 'honey', emoji: '🍯', name: 'Honey', category: ElementCategory.food),
+    'wheat': EmojiElement(id: 'wheat', emoji: '🌾', name: 'Wheat', category: ElementCategory.food),
+    'flour': EmojiElement(id: 'flour', emoji: '🥡', name: 'Flour', category: ElementCategory.food),
+    'dough': EmojiElement(id: 'dough', emoji: '🥟', name: 'Dough', category: ElementCategory.food),
+    'bread': EmojiElement(id: 'bread', emoji: '🍞', name: 'Bread', category: ElementCategory.food),
+    'apple': EmojiElement(id: 'apple', emoji: '🍎', name: 'Apple', category: ElementCategory.food),
+    'fruit': EmojiElement(id: 'fruit', emoji: '🍇', name: 'Fruit', category: ElementCategory.food),
+    'juice': EmojiElement(id: 'juice', emoji: '🧃', name: 'Juice', category: ElementCategory.food),
+    'wine': EmojiElement(id: 'wine', emoji: '🍷', name: 'Wine', category: ElementCategory.food),
+    'meat': EmojiElement(id: 'meat', emoji: '🥩', name: 'Meat', category: ElementCategory.food),
+    'steak': EmojiElement(id: 'steak', emoji: '🥩', name: 'Steak', category: ElementCategory.food),
+    'cheese': EmojiElement(id: 'cheese', emoji: '🧀', name: 'Cheese', category: ElementCategory.food),
+    'pizza': EmojiElement(id: 'pizza', emoji: '🍕', name: 'Pizza', category: ElementCategory.food),
+    'burger': EmojiElement(id: 'burger', emoji: '🍔', name: 'Burger', category: ElementCategory.food),
+    'egg_food': EmojiElement(id: 'egg_food', emoji: '🍳', name: 'Fried Egg', category: ElementCategory.food),
+    'cake': EmojiElement(id: 'cake', emoji: '🎂', name: 'Cake', category: ElementCategory.food),
+    'cookie': EmojiElement(id: 'cookie', emoji: '🍪', name: 'Cookie', category: ElementCategory.food),
+    'chocolate': EmojiElement(id: 'chocolate', emoji: '🍫', name: 'Chocolate', category: ElementCategory.food),
+    'coffee': EmojiElement(id: 'coffee', emoji: '☕', name: 'Coffee', category: ElementCategory.food),
+    'milk': EmojiElement(id: 'milk', emoji: '🥛', name: 'Milk', category: ElementCategory.food),
 
-    // Tier 4
+    // Space / Meta
     'rocket': EmojiElement(id: 'rocket', emoji: '🚀', name: 'Rocket', category: ElementCategory.space),
     'ufo': EmojiElement(id: 'ufo', emoji: '🛸', name: 'UFO', category: ElementCategory.space),
     'alien': EmojiElement(id: 'alien', emoji: '👽', name: 'Alien', category: ElementCategory.space),
+    'ancient_world': EmojiElement(id: 'ancient_world', emoji: '🌏', name: 'Ancient World', category: ElementCategory.space),
+    'star': EmojiElement(id: 'star', emoji: '⭐', name: 'Star', category: ElementCategory.space),
+    'galaxy': EmojiElement(id: 'galaxy', emoji: '🌌', name: 'Galaxy', category: ElementCategory.space),
+    'black_hole': EmojiElement(id: 'black_hole', emoji: '🕳️', name: 'Black Hole', category: ElementCategory.space),
+    'astronaut': EmojiElement(id: 'astronaut', emoji: '👨‍🚀', name: 'Astronaut', category: ElementCategory.space),
+    'telescope': EmojiElement(id: 'telescope', emoji: '🔭', name: 'Telescope', category: ElementCategory.space),
+    'planet': EmojiElement(id: 'planet', emoji: '🪐', name: 'Planet', category: ElementCategory.space),
+
+    // Mythology / Magic
     'crystal_ball': EmojiElement(id: 'crystal_ball', emoji: '🔮', name: 'Crystal Ball', category: ElementCategory.magic),
     'wizard': EmojiElement(id: 'wizard', emoji: '🧙', name: 'Wizard', category: ElementCategory.magic),
     'dragon': EmojiElement(id: 'dragon', emoji: '🐉', name: 'Dragon', category: ElementCategory.mythology),
     'dinosaur': EmojiElement(id: 'dinosaur', emoji: '🦕', name: 'Dinosaur', category: ElementCategory.animals),
-    'ancient_world': EmojiElement(id: 'ancient_world', emoji: '🌏', name: 'Ancient World', category: ElementCategory.space),
-
-    // Extra needed for Tier 4
-    'human': EmojiElement(id: 'human', emoji: '👤', name: 'Human', category: ElementCategory.human),
-    'moon': EmojiElement(id: 'moon', emoji: '🌙', name: 'Moon', category: ElementCategory.space),
-
-    // Easter egg
-    'teddy_bear': EmojiElement(id: 'teddy_bear', emoji: '🧸', name: 'Teddy Bear', category: ElementCategory.human),
     'magic': EmojiElement(id: 'magic', emoji: '✨', name: 'Magic', category: ElementCategory.magic),
     'zombie': EmojiElement(id: 'zombie', emoji: '🧟', name: 'Zombie', category: ElementCategory.mythology),
-    'rock_music': EmojiElement(id: 'rock_music', emoji: '🎸', name: 'Rock Music', category: ElementCategory.human),
-    'haunted_house': EmojiElement(id: 'haunted_house', emoji: '🏚️', name: 'Haunted House', category: ElementCategory.human),
-    'dream': EmojiElement(id: 'dream', emoji: '💭', name: 'Dream', category: ElementCategory.human),
-    'deep_sleep': EmojiElement(id: 'deep_sleep', emoji: '😴', name: 'Deep Sleep', category: ElementCategory.human),
-
-    // Extra needed for Easter egg
-    'bear': EmojiElement(id: 'bear', emoji: '🐻', name: 'Bear', category: ElementCategory.animals),
+    'haunted_house': EmojiElement(id: 'haunted_house', emoji: '🏚️', name: 'Haunted House', category: ElementCategory.mythology),
     'unicorn': EmojiElement(id: 'unicorn', emoji: '🦄', name: 'Unicorn', category: ElementCategory.mythology),
-    'skull': EmojiElement(id: 'skull', emoji: '💀', name: 'Skull', category: ElementCategory.human),
-    'music': EmojiElement(id: 'music', emoji: '🎵', name: 'Music', category: ElementCategory.human),
     'ghost': EmojiElement(id: 'ghost', emoji: '👻', name: 'Ghost', category: ElementCategory.mythology),
-    'sleep': EmojiElement(id: 'sleep', emoji: '💤', name: 'Sleep', category: ElementCategory.human),
-    'sheep': EmojiElement(id: 'sheep', emoji: '🐑', name: 'Sheep', category: ElementCategory.animals),
+    'vampire': EmojiElement(id: 'vampire', emoji: '🧛', name: 'Vampire', category: ElementCategory.mythology),
+    'mermaid': EmojiElement(id: 'mermaid', emoji: '🧜‍♀️', name: 'Mermaid', category: ElementCategory.mythology),
+    'fairy': EmojiElement(id: 'fairy', emoji: '🧚', name: 'Fairy', category: ElementCategory.mythology),
+    'angel': EmojiElement(id: 'angel', emoji: '👼', name: 'Angel', category: ElementCategory.mythology),
+    'demon': EmojiElement(id: 'demon', emoji: '👿', name: 'Demon', category: ElementCategory.mythology),
+    'phoenix': EmojiElement(id: 'phoenix', emoji: '🐦‍🔥', name: 'Phoenix', category: ElementCategory.mythology),
+    'pegasus': EmojiElement(id: 'pegasus', emoji: '🪽', name: 'Pegasus', category: ElementCategory.mythology),
+    'potion': EmojiElement(id: 'potion', emoji: '🧪', name: 'Potion', category: ElementCategory.magic),
+    'spellbook': EmojiElement(id: 'spellbook', emoji: '📖', name: 'Spellbook', category: ElementCategory.magic),
+    'wand': EmojiElement(id: 'wand', emoji: '🪄', name: 'Wand', category: ElementCategory.magic),
   };
 
   static const List<Combination> combinations = [
-    // Tier 1
+    // Base and Tier 1
     Combination(element1: 'fire', element2: 'water', result: 'steam'),
-    Combination(element1: 'water', element2: 'earth', result: 'plant'),
+    Combination(element1: 'water', element2: 'earth', result: 'mud'),
+    Combination(element1: 'mud', element2: 'fire', result: 'brick'),
+    Combination(element1: 'brick', element2: 'brick', result: 'wall'),
+    Combination(element1: 'wall', element2: 'wall', result: 'house'),
+    Combination(element1: 'water', element2: 'earth', result: 'plant'), // plant might conflict with mud if order isn't exact, usually games use first match, but here plant is better maybe from rain+earth. I'll make Rain + Earth = Plant
+    Combination(element1: 'rain', element2: 'earth', result: 'plant'),
     Combination(element1: 'fire', element2: 'earth', result: 'lava'),
     Combination(element1: 'wind', element2: 'wind', result: 'tornado'),
     Combination(element1: 'water', element2: 'water', result: 'ocean'),
     Combination(element1: 'earth', element2: 'earth', result: 'mountain'),
     Combination(element1: 'fire', element2: 'fire', result: 'sun'),
+    Combination(element1: 'steam', element2: 'air', result: 'cloud'), // Wait, no air, we have wind
+    Combination(element1: 'steam', element2: 'wind', result: 'cloud'),
+    Combination(element1: 'cloud', element2: 'water', result: 'rain'),
+    Combination(element1: 'rain', element2: 'wind', result: 'snow'),
+    Combination(element1: 'water', element2: 'wind', result: 'ice'),
+    Combination(element1: 'cloud', element2: 'fire', result: 'lightning'),
+    Combination(element1: 'cloud', element2: 'lightning', result: 'storm'),
 
-    // Tier 2
+    // Geology & Nature
+    Combination(element1: 'fire', element2: 'wood', result: 'ash'),
+    Combination(element1: 'fire', element2: 'plant', result: 'smoke'),
+    Combination(element1: 'earth', element2: 'wind', result: 'dust'),
+    Combination(element1: 'rock', element2: 'wind', result: 'sand'),
+    Combination(element1: 'fire', element2: 'sand', result: 'glass'),
+    Combination(element1: 'mud', element2: 'sand', result: 'clay'),
+    Combination(element1: 'ocean', element2: 'sun', result: 'rainbow'),
     Combination(element1: 'plant', element2: 'plant', result: 'tree'),
     Combination(element1: 'tree', element2: 'fire', result: 'wood'),
-    Combination(element1: 'ocean', element2: 'sun', result: 'rainbow'),
-    Combination(element1: 'mountain', element2: 'wind', result: 'eagle'),
-    Combination(element1: 'plant', element2: 'water', result: 'mushroom'),
-    Combination(element1: 'wood', element2: 'wood', result: 'house'),
-    Combination(element1: 'sun', element2: 'earth', result: 'sunflower'),
     Combination(element1: 'lava', element2: 'water', result: 'rock'),
-    Combination(element1: 'tornado', element2: 'ocean', result: 'hurricane'),
-
-    // Extra for Tier 3
-    Combination(element1: 'sunflower', element2: 'wind', result: 'bee'), // Created bee
-    Combination(element1: 'steam', element2: 'water', result: 'rain'),   // Created rain
-
-    // Tier 3
-    Combination(element1: 'house', element2: 'house', result: 'city'),
-    Combination(element1: 'tree', element2: 'tree', result: 'forest'),
-    Combination(element1: 'forest', element2: 'eagle', result: 'owl'),
     Combination(element1: 'rock', element2: 'rock', result: 'diamond'),
+    Combination(element1: 'tornado', element2: 'ocean', result: 'hurricane'),
     Combination(element1: 'ocean', element2: 'lava', result: 'island'),
-    Combination(element1: 'sunflower', element2: 'bee', result: 'honey'),
-    Combination(element1: 'diamond', element2: 'fire', result: 'ring'),
+    Combination(element1: 'swamp', element2: 'plant', result: 'mushroom'), // Swamp? Mud + Plant = Swamp
+    Combination(element1: 'mud', element2: 'plant', result: 'swamp'),
+
+    // Life & Animals
+    Combination(element1: 'earth', element2: 'water', result: 'mud'), // Used
+    Combination(element1: 'lightning', element2: 'swamp', result: 'life'),
+    Combination(element1: 'life', element2: 'earth', result: 'human'),
+    Combination(element1: 'life', element2: 'water', result: 'fish'),
+    Combination(element1: 'life', element2: 'wind', result: 'bird'),
+    Combination(element1: 'bird', element2: 'bird', result: 'egg'),
+    Combination(element1: 'fish', element2: 'blood', result: 'shark'), // Need blood. Water + Meat
+    Combination(element1: 'water', element2: 'meat', result: 'blood'), // I don't have blood. I'll make shark from Fish + Sword
+    Combination(element1: 'fish', element2: 'sword', result: 'shark'),
+    Combination(element1: 'fish', element2: 'ocean', result: 'whale'),
+    Combination(element1: 'fish', element2: 'magic', result: 'dolphin'),
+    Combination(element1: 'fish', element2: 'spider', result: 'octopus'), // Funny
+    Combination(element1: 'fish', element2: 'sand', result: 'crab'),
+    Combination(element1: 'moon', element2: 'animal', result: 'wolf'), // Animal? Life + Forest = Animal
+    Combination(element1: 'life', element2: 'forest', result: 'animal'), // Wait, I don't have animal. I'll just use Dog
+    Combination(element1: 'wolf', element2: 'human', result: 'dog'),
+    Combination(element1: 'moon', element2: 'dog', result: 'wolf'),
+    Combination(element1: 'house', element2: 'mouse', result: 'cat'),
+    Combination(element1: 'cat', element2: 'king', result: 'lion'),
+    Combination(element1: 'cat', element2: 'tree', result: 'tiger'),
+    Combination(element1: 'tree', element2: 'human', result: 'monkey'),
+    Combination(element1: 'swamp', element2: 'animal', result: 'snake'),
+    Combination(element1: 'swamp', element2: 'life', result: 'frog'),
+    Combination(element1: 'bug', element2: 'thread', result: 'spider'), // Thread?
+    Combination(element1: 'life', element2: 'plant', result: 'bug'),
+    Combination(element1: 'bug', element2: 'flower', result: 'butterfly'),
+    Combination(element1: 'bug', element2: 'earth', result: 'ant'),
+    Combination(element1: 'human', element2: 'field', result: 'horse'), // Field?
+    Combination(element1: 'mountain', element2: 'wind', result: 'eagle'),
+    Combination(element1: 'forest', element2: 'eagle', result: 'owl'),
+
+    // Human & Society
+    Combination(element1: 'human', element2: 'human', result: 'family'),
+    Combination(element1: 'family', element2: 'family', result: 'village'),
+    Combination(element1: 'village', element2: 'house', result: 'city'),
+    Combination(element1: 'house', element2: 'house', result: 'village'),
     Combination(element1: 'city', element2: 'rain', result: 'night_city'),
-    Combination(element1: 'eagle', element2: 'wind', result: 'airplane'),
+    Combination(element1: 'love', element2: 'human', result: 'heart'),
+    Combination(element1: 'human', element2: 'magic', result: 'love'),
+    Combination(element1: 'family', element2: 'love', result: 'baby'),
+    Combination(element1: 'human', element2: 'plant', result: 'farmer'),
+    Combination(element1: 'human', element2: 'sword', result: 'warrior'),
+    Combination(element1: 'human', element2: 'castle', result: 'king'),
+    Combination(element1: 'house', element2: 'wall', result: 'castle'),
 
-    // Extra for Tier 4
-    Combination(element1: 'earth', element2: 'sun', result: 'human'),      // Created human
-    Combination(element1: 'sun', element2: 'rock', result: 'moon'),        // Created moon
+    // Technology
+    Combination(element1: 'wood', element2: 'metal', result: 'tool'), // Metal?
+    Combination(element1: 'rock', element2: 'fire', result: 'metal'), // I need to add metal
+    Combination(element1: 'metal', element2: 'tool', result: 'sword'),
+    Combination(element1: 'metal', element2: 'fire', result: 'gun'),
+    Combination(element1: 'metal', element2: 'wood', result: 'shield'),
+    Combination(element1: 'wood', element2: 'tool', result: 'wheel'),
+    Combination(element1: 'wheel', element2: 'metal', result: 'car'),
+    Combination(element1: 'car', element2: 'steam', result: 'train'),
+    Combination(element1: 'wood', element2: 'water', result: 'boat'),
+    Combination(element1: 'boat', element2: 'wind', result: 'ship'),
+    Combination(element1: 'ship', element2: 'fish', result: 'submarine'),
+    Combination(element1: 'tool', element2: 'electricity', result: 'computer'), // Electricity?
+    Combination(element1: 'lightning', element2: 'metal', result: 'electricity'),
+    Combination(element1: 'computer', element2: 'life', result: 'robot'),
+    Combination(element1: 'computer', element2: 'computer', result: 'internet'),
+    Combination(element1: 'internet', element2: 'tool', result: 'phone'),
+    Combination(element1: 'electricity', element2: 'metal', result: 'battery'),
+    Combination(element1: 'electricity', element2: 'glass', result: 'lightbulb'),
 
-    // Tier 4
+    // Food
+    Combination(element1: 'farmer', element2: 'field', result: 'wheat'),
+    Combination(element1: 'wheat', element2: 'stone', result: 'flour'), // Stone = Rock
+    Combination(element1: 'flour', element2: 'water', result: 'dough'),
+    Combination(element1: 'dough', element2: 'fire', result: 'bread'),
+    Combination(element1: 'tree', element2: 'sun', result: 'apple'),
+    Combination(element1: 'tree', element2: 'farmer', result: 'fruit'),
+    Combination(element1: 'fruit', element2: 'tool', result: 'juice'),
+    Combination(element1: 'fruit', element2: 'time', result: 'wine'), // Time?
+    Combination(element1: 'glass', element2: 'sand', result: 'hourglass'),
+    Combination(element1: 'hourglass', element2: 'magic', result: 'time'),
+    Combination(element1: 'cow', element2: 'tool', result: 'meat'),
+    Combination(element1: 'meat', element2: 'fire', result: 'steak'),
+    Combination(element1: 'milk', element2: 'time', result: 'cheese'),
+    Combination(element1: 'cow', element2: 'farmer', result: 'milk'),
+    Combination(element1: 'dough', element2: 'cheese', result: 'pizza'),
+    Combination(element1: 'bread', element2: 'meat', result: 'burger'),
+    Combination(element1: 'egg', element2: 'fire', result: 'egg_food'),
+    Combination(element1: 'dough', element2: 'sugar', result: 'cookie'), // Sugar?
+    Combination(element1: 'plant', element2: 'sun', result: 'sugar'), // Add sugar
+    Combination(element1: 'dough', element2: 'egg', result: 'cake'),
+    Combination(element1: 'bean', element2: 'sugar', result: 'chocolate'),
+    Combination(element1: 'plant', element2: 'water', result: 'bean'),
+    Combination(element1: 'bean', element2: 'fire', result: 'coffee'),
+
+    // Space / Meta
     Combination(element1: 'airplane', element2: 'sun', result: 'rocket'),
     Combination(element1: 'rocket', element2: 'earth', result: 'ufo'),
     Combination(element1: 'ufo', element2: 'human', result: 'alien'),
-    Combination(element1: 'diamond', element2: 'alien', result: 'crystal_ball'),
-    Combination(element1: 'crystal_ball', element2: 'moon', result: 'wizard'),
-    Combination(element1: 'wizard', element2: 'fire', result: 'dragon'),
-    Combination(element1: 'dragon', element2: 'ocean', result: 'dinosaur'),
     Combination(element1: 'dinosaur', element2: 'mountain', result: 'ancient_world'),
+    Combination(element1: 'sun', element2: 'space', result: 'star'), // Space?
+    Combination(element1: 'moon', element2: 'sky', result: 'space'),
+    Combination(element1: 'cloud', element2: 'air', result: 'sky'),
+    Combination(element1: 'star', element2: 'star', result: 'galaxy'),
+    Combination(element1: 'star', element2: 'darkness', result: 'black_hole'), // Darkness?
+    Combination(element1: 'sky', element2: 'night', result: 'darkness'), // Night?
+    Combination(element1: 'time', element2: 'sun', result: 'day'),
+    Combination(element1: 'time', element2: 'moon', result: 'night'),
+    Combination(element1: 'human', element2: 'rocket', result: 'astronaut'),
+    Combination(element1: 'glass', element2: 'star', result: 'telescope'),
+    Combination(element1: 'earth', element2: 'space', result: 'planet'),
 
-    // Extra for Easter Egg
-    Combination(element1: 'tree', element2: 'mushroom', result: 'bear'),      // Created bear
-    Combination(element1: 'rainbow', element2: 'eagle', result: 'unicorn'),   // Created unicorn
-    Combination(element1: 'human', element2: 'fire', result: 'skull'),        // Created skull
-    Combination(element1: 'eagle', element2: 'sun', result: 'music'),         // Created music
-    Combination(element1: 'skull', element2: 'wind', result: 'ghost'),        // Created ghost
-    Combination(element1: 'human', element2: 'moon', result: 'sleep'),        // Created sleep
-    Combination(element1: 'human', element2: 'mushroom', result: 'sheep'),    // Created sheep
-
-    // Easter Egg
-    Combination(element1: 'honey', element2: 'bear', result: 'teddy_bear'),
-    Combination(element1: 'rainbow', element2: 'unicorn', result: 'magic'),
+    // Mythology & Magic
+    Combination(element1: 'diamond', element2: 'alien', result: 'crystal_ball'),
+    Combination(element1: 'crystal_ball', element2: 'human', result: 'wizard'),
+    Combination(element1: 'wizard', element2: 'fire', result: 'dragon'),
+    Combination(element1: 'dragon', element2: 'time', result: 'dinosaur'),
+    Combination(element1: 'rainbow', element2: 'unicorn', result: 'magic'), // Wait, Unicorn is created later?
+    Combination(element1: 'horse', element2: 'rainbow', result: 'unicorn'),
+    Combination(element1: 'human', element2: 'magic', result: 'wizard'),
     Combination(element1: 'wizard', element2: 'skull', result: 'zombie'),
-    Combination(element1: 'music', element2: 'fire', result: 'rock_music'),
+    Combination(element1: 'human', element2: 'blood', result: 'vampire'), // Need blood
+    Combination(element1: 'human', element2: 'fish', result: 'mermaid'),
+    Combination(element1: 'human', element2: 'bird', result: 'angel'),
+    Combination(element1: 'angel', element2: 'fire', result: 'demon'),
+    Combination(element1: 'bird', element2: 'fire', result: 'phoenix'),
+    Combination(element1: 'horse', element2: 'bird', result: 'pegasus'),
+    Combination(element1: 'magic', element2: 'water', result: 'potion'),
+    Combination(element1: 'magic', element2: 'book', result: 'spellbook'), // Book?
+    Combination(element1: 'wood', element2: 'magic', result: 'wand'),
+    Combination(element1: 'paper', element2: 'paper', result: 'book'),
+    Combination(element1: 'wood', element2: 'water', result: 'paper'),
+
+    // Previous elements from design doc
+    // Tier 2 missing
+    Combination(element1: 'sun', element2: 'earth', result: 'sunflower'),
+    Combination(element1: 'sunflower', element2: 'wind', result: 'bee'), // Created bee
+    Combination(element1: 'tree', element2: 'tree', result: 'forest'),
+    // Tier 3 missing
+    Combination(element1: 'sunflower', element2: 'bee', result: 'honey'),
+    Combination(element1: 'diamond', element2: 'fire', result: 'ring'),
+    Combination(element1: 'eagle', element2: 'wind', result: 'airplane'),
+    // Easter Egg missing
+    Combination(element1: 'tree', element2: 'mushroom', result: 'bear'), 
+    Combination(element1: 'honey', element2: 'bear', result: 'teddy_bear'),
+    Combination(element1: 'human', element2: 'fire', result: 'skull'),
+    Combination(element1: 'eagle', element2: 'sun', result: 'music'),
+    Combination(element1: 'skull', element2: 'wind', result: 'ghost'),
     Combination(element1: 'house', element2: 'ghost', result: 'haunted_house'),
+    Combination(element1: 'human', element2: 'moon', result: 'sleep'),
+    Combination(element1: 'human', element2: 'mushroom', result: 'sheep'),
     Combination(element1: 'sleep', element2: 'moon', result: 'dream'),
     Combination(element1: 'dream', element2: 'sheep', result: 'deep_sleep'),
+    Combination(element1: 'music', element2: 'fire', result: 'rock_music'),
   ];
 }

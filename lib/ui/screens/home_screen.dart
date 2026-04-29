@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../providers/game_state.dart';
 import 'game_screen.dart';
+import 'daily_puzzle_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -75,27 +76,46 @@ class HomeScreen extends StatelessWidget {
                   const Spacer(),
                   
                   // Play Button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const GameScreen()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const GameScreen()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: const Text('ENTER LAB', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        ).animate(onPlay: (c) => c.repeat(reverse: true))
+                         .scaleXY(end: 1.05, duration: 1.seconds, curve: Curves.easeInOut),
                       ),
-                      elevation: 8,
-                    ),
-                    child: const Text(
-                      'ENTER LAB',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, letterSpacing: 2),
-                    ),
-                  ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-                   .scaleXY(end: 1.05, duration: 1.seconds, curve: Curves.easeInOut),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const DailyPuzzleScreen()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white12,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Icon(Icons.extension),
+                      ),
+                    ],
+                  ),
                   
                   const SizedBox(height: 40),
                 ],
