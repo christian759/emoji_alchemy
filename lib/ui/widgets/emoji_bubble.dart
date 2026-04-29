@@ -4,13 +4,13 @@ import '../../models/emoji_element.dart';
 class EmojiBubble extends StatelessWidget {
   final EmojiElement element;
   final double size;
-  final bool animate;
+  final bool isAnimated;
 
   const EmojiBubble({
     super.key,
     required this.element,
     this.size = 60,
-    this.animate = false,
+    this.isAnimated = false,
   });
 
   @override
