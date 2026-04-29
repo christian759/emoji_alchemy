@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.5), width: 2),
+                      border: Border.all(color: Theme.of(context).primaryColor, width: 3),
                     ),
                     child: Column(
                       children: [
@@ -61,10 +61,10 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   LinearProgressIndicator(
                     value: gameState.discoveriesCount / gameState.maxDiscoveries,
-                    backgroundColor: Colors.white12,
+                    backgroundColor: Colors.white24,
                     color: Theme.of(context).primaryColor,
-                    minHeight: 12,
-                    borderRadius: BorderRadius.circular(6),
+                    minHeight: 16,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   const SizedBox(height: 8),
                   Text(

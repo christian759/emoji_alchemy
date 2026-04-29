@@ -30,11 +30,9 @@ class DiscoveryOverlay extends StatelessWidget {
             ).animate().slideY(begin: -2, duration: 500.ms, curve: Curves.easeOutBack).fadeIn(),
             const SizedBox(height: 40),
             
-            // Scaled up Emoji
             EmojiBubble(element: element, size: 150)
                 .animate()
-                .scale(begin: const Offset(0.2, 0.2), duration: 600.ms, curve: Curves.elasticOut)
-                .shimmer(delay: 600.ms, duration: 1.seconds, color: Colors.white54),
+                .scale(begin: const Offset(0.2, 0.2), duration: 600.ms, curve: Curves.elasticOut),
                 
             const SizedBox(height: 24),
             Text(
@@ -50,13 +48,13 @@ class DiscoveryOverlay extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Theme.of(context).primaryColor),
+                border: Border.all(color: Colors.white, width: 2),
               ),
               child: Text(
                 element.category.name.toUpperCase(),
-                style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ).animate().fadeIn(delay: 800.ms).slideX(begin: 1),
             

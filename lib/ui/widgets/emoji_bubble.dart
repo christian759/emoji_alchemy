@@ -21,21 +21,9 @@ class EmojiBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-          BoxShadow(
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
-            blurRadius: 15,
-            spreadRadius: 2,
-          ),
-        ],
         border: Border.all(
-          color: Colors.white10,
-          width: 1,
+          color: Theme.of(context).primaryColor,
+          width: 3,
         ),
       ),
       alignment: Alignment.center,
