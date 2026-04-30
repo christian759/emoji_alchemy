@@ -75,7 +75,7 @@ class DiscoveryScreen extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
             const Spacer(),
             ElevatedButton(
               onPressed: () {

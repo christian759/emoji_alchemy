@@ -14,6 +14,7 @@ class DiscoveryOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
@@ -74,9 +75,9 @@ class DiscoveryOverlay extends StatelessWidget {
                 const SizedBox(width: 12),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    navigator.pop();
                     Future.microtask(() {
-                      Navigator.of(context).push(
+                      navigator.push(
                         MaterialPageRoute(builder: (_) => DiscoveryScreen(element: element)),
                       );
                     });

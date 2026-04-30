@@ -217,7 +217,7 @@ class HomeScreen extends StatelessWidget {
       () => const ProfileScreen(),
     ];
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => routes[index]()!),
+      MaterialPageRoute(builder: (_) => routes[index]()),
     );
   }
 }
@@ -254,28 +254,3 @@ class _ActionTile extends StatelessWidget {
   }
 }
 
-class _NavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool active;
-
-  const _NavItem({required this.icon, required this.label, this.active = false});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: active ? theme.colorScheme.secondary : const Color(0xFF8A4F2B)),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: active ? theme.colorScheme.secondary : const Color(0xFF7A5D42),
-          ),
-        ),
-      ],
-    );
-  }
-}

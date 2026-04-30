@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../data/element_data.dart';
 import '../../models/element_category.dart';
 import '../../providers/game_state.dart';
 import '../widgets/app_bottom_navigation.dart';
@@ -68,7 +67,7 @@ class _CodexScreenState extends State<CodexScreen> {
                     return ChoiceChip(
                       label: Text(filter['label']),
                       selected: isSelected,
-                      selectedColor: theme.colorScheme.secondary.withOpacity(0.16),
+                      selectedColor: theme.colorScheme.secondary.withValues(alpha: 0.16),
                       backgroundColor: theme.canvasColor,
                       labelStyle: TextStyle(
                         color: isSelected ? theme.colorScheme.secondary : const Color(0xFF5E4A3D),
