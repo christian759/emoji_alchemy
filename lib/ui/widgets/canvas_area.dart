@@ -43,18 +43,13 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
       double distance = sqrt(dx * dx + dy * dy);
 
       if (distance < _bubbleSize * 0.8) { // Collision threshold
-        final result = gameState.attemptCombination(dragId, element.id, (x + element.x)/2, (y + element.y)/2);
-        if (result != null) {
-          // Play discovery overlay!
+        final outcome = gameState.attemptCombination(dragId, element.id, (x + element.x) / 2, (y + element.y) / 2);
+        if (outcome != null && outcome.wasNewDiscovery) {
           showDialog(
             context: context,
             barrierColor: Colors.black87,
-            builder: (_) => DiscoveryOverlay(element: result),
+            builder: (_) => DiscoveryOverlay(outcome: outcome),
           );
-        } else {
-          // If result is null but it merged successfully, it was already discovered.
-          // Or it failed. We aren't returning distinct enums yet.
-          // Let's rely on the state changing for basic logic.
         }
         break;
       }

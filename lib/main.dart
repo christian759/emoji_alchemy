@@ -6,6 +6,7 @@ import 'theme/app_theme.dart';
 import 'ui/screens/codex_screen.dart';
 import 'ui/screens/daily_puzzle_screen.dart';
 import 'ui/screens/game_screen.dart';
+import 'ui/screens/hint_screen.dart';
 import 'ui/screens/home_screen.dart';
 import 'ui/screens/profile_screen.dart';
 
@@ -36,6 +37,7 @@ class EmojiAlchemyApp extends StatelessWidget {
           '/codex': (_) => const CodexScreen(),
           '/profile': (_) => const ProfileScreen(),
           '/daily': (_) => const DailyPuzzleScreen(),
+          '/hints': (_) => const HintScreen(),
         },
       ),
     );

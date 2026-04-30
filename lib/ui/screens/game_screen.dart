@@ -11,6 +11,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final gameState = Provider.of<GameState>(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -34,29 +35,28 @@ class GameScreen extends StatelessWidget {
                         style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
-                      Builder(
-                        builder: (context) {
-                          final gameState = Provider.of<GameState>(context);
-                          return Text(
-                            '${gameState.discoveriesCount} discovered',
-                            style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF7A5D42)),
-                          );
-                        },
+                      Text(
+                        '${gameState.discoveriesCount} discovered',
+                        style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF7A5D42)),
                       ),
                     ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4B382E),
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.lightbulb_outline, color: Colors.white, size: 18),
-                        const SizedBox(width: 8),
-                        Text('3 hints', style: theme.textTheme.bodySmall?.copyWith(color: Colors.white)),
-                      ],
+                  InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: () => Navigator.of(context).pushNamed('/hints'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4B382E),
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.lightbulb_outline, color: Colors.white, size: 18),
+                          const SizedBox(width: 8),
+                          Text('${gameState.hintsRemaining} hints', style: theme.textTheme.bodySmall?.copyWith(color: Colors.white)),
+                        ],
+                      ),
                     ),
                   ),
                 ],

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../models/emoji_element.dart';
+import 'package:provider/provider.dart';
+import '../../providers/game_state.dart';
 import '../screens/discovery_screen.dart';
 import 'emoji_bubble.dart';
 
 class DiscoveryOverlay extends StatelessWidget {
-  final EmojiElement element;
+  final CombinationOutcome outcome;
 
   const DiscoveryOverlay({
     super.key,
-    required this.element,
+    required this.outcome,
   });
 
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
+    final hintText = Provider.of<GameState>(context, listen: false).unlockHintFor(outcome.result);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
@@ -24,28 +27,25 @@ class DiscoveryOverlay extends StatelessWidget {
             const Text(
               'NEW DISCOVERY!',
               style: TextStyle(
-                color: Colors.amber, 
-                fontSize: 24, 
-                fontWeight: FontWeight.bold, 
-                letterSpacing: 4
+                color: Colors.amber,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 4,
               ),
             ).animate().slideY(begin: -2, duration: 500.ms, curve: Curves.easeOutBack).fadeIn(),
             const SizedBox(height: 40),
-            
-            EmojiBubble(element: element, size: 150)
+            EmojiBubble(element: outcome.result, size: 150)
                 .animate()
                 .scale(begin: const Offset(0.2, 0.2), duration: 600.ms, curve: Curves.elasticOut),
-                
             const SizedBox(height: 24),
             Text(
-              element.name,
+              outcome.result.name,
               style: const TextStyle(
-                color: Colors.white, 
-                fontSize: 48, 
-                fontWeight: FontWeight.bold
+                color: Colors.white,
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
               ),
             ).animate().fadeIn(delay: 500.ms).slideY(begin: 1),
-            
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -55,17 +55,40 @@ class DiscoveryOverlay extends StatelessWidget {
                 border: Border.all(color: Colors.white, width: 2),
               ),
               child: Text(
-                element.category.name.toUpperCase(),
+                outcome.result.category.name.toUpperCase(),
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ).animate().fadeIn(delay: 800.ms).slideX(begin: 1),
-            
+            const SizedBox(height: 24),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white30, width: 1.2),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    '${outcome.ingredientA.emoji} + ${outcome.ingredientB.emoji} = ${outcome.result.emoji}',
+                    style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    hintText,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white70, fontSize: 16),
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(delay: 1.seconds),
             const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => navigator.pop(),
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.white12,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -78,7 +101,7 @@ class DiscoveryOverlay extends StatelessWidget {
                     navigator.pop();
                     Future.microtask(() {
                       navigator.push(
-                        MaterialPageRoute(builder: (_) => DiscoveryScreen(element: element)),
+                        MaterialPageRoute(builder: (_) => DiscoveryScreen(element: outcome.result)),
                       );
                     });
                   },
