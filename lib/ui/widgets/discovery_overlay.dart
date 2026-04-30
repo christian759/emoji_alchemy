@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../models/emoji_element.dart';
+import '../screens/discovery_screen.dart';
 import 'emoji_bubble.dart';
 
 class DiscoveryOverlay extends StatelessWidget {
@@ -58,14 +59,35 @@ class DiscoveryOverlay extends StatelessWidget {
               ),
             ).animate().fadeIn(delay: 800.ms).slideX(begin: 1),
             
-            const SizedBox(height: 60),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white12,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              ),
-              child: const Text('CONTINUE', style: TextStyle(color: Colors.white)),
+            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.white12,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  ),
+                  child: const Text('CONTINUE', style: TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(width: 12),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Future.microtask(() {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => DiscoveryScreen(element: element)),
+                      );
+                    });
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  ),
+                  child: const Text('VIEW DISCOVERY', style: TextStyle(color: Colors.white)),
+                ),
+              ],
             ).animate().fadeIn(delay: 1.5.seconds),
           ],
         ),

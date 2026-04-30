@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../models/emoji_element.dart';
+import '../models/element_category.dart';
 import '../models/placed_element.dart';
 import '../data/element_data.dart';
 
@@ -18,6 +19,48 @@ class GameState extends ChangeNotifier {
 
   Set<String> get discoveredElements => _discoveredElements;
   List<PlacedElement> get canvasElements => _canvasElements;
+
+  List<EmojiElement> get discoveredElementList {
+    final list = _discoveredElements
+        .map((id) => ElementData.elements[id]!)
+        .toList();
+    list.sort((a, b) => a.name.compareTo(b.name));
+    return list;
+  }
+
+  int get completionPercent => ((discoveriesCount / maxDiscoveries) * 100).round();
+
+  int get currentStreak => _prefs.getInt('dayStreak') ?? 14;
+
+  Map<ElementCategory, int> get discoveredByCategory {
+    final counts = <ElementCategory, int>{};
+    for (var id in _discoveredElements) {
+      final element = ElementData.elements[id];
+      if (element == null) continue;
+      counts[element.category] = (counts[element.category] ?? 0) + 1;
+    }
+    return counts;
+  }
+
+  EmojiElement get rarestElement {
+    if (_discoveredElements.isEmpty) {
+      return ElementData.elements.values.first;
+    }
+    final totalByCategory = <ElementCategory, int>{};
+    for (var element in ElementData.elements.values) {
+      totalByCategory[element.category] = (totalByCategory[element.category] ?? 0) + 1;
+    }
+    final entries = discoveredElementList.toList();
+    entries.sort((a, b) {
+      final remainingA = (totalByCategory[a.category] ?? 0) - (discoveredByCategory[a.category] ?? 0);
+      final remainingB = (totalByCategory[b.category] ?? 0) - (discoveredByCategory[b.category] ?? 0);
+      if (remainingA != remainingB) {
+        return remainingA.compareTo(remainingB);
+      }
+      return a.name.compareTo(b.name);
+    });
+    return entries.first;
+  }
 
   // Ranks (Adjusted for the current dataset size)
   String get currentRank {

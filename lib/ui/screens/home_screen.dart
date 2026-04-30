@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../providers/game_state.dart';
+import '../widgets/app_bottom_navigation.dart';
+import 'codex_screen.dart';
 import 'game_screen.dart';
 import 'daily_puzzle_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -173,7 +176,7 @@ class HomeScreen extends StatelessWidget {
                         label: 'Codex',
                         onTap: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const DailyPuzzleScreen()),
+                            MaterialPageRoute(builder: (_) => const CodexScreen()),
                           );
                         },
                       ),
@@ -182,7 +185,7 @@ class HomeScreen extends StatelessWidget {
                         label: 'Profile',
                         onTap: () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const DailyPuzzleScreen()),
+                            MaterialPageRoute(builder: (_) => const ProfileScreen()),
                           );
                         },
                       ),
@@ -190,31 +193,31 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 28),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      color: cardColor,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFFB89672), width: 1.2),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
-                        _NavItem(icon: Icons.home, label: 'Home', active: true),
-                        _NavItem(icon: Icons.science, label: 'Lab'),
-                        _NavItem(icon: Icons.book, label: 'Codex'),
-                        _NavItem(icon: Icons.person, label: 'Profile'),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
                 ],
               ),
             ),
           );
         },
       ),
+      bottomNavigationBar: AppBottomNavigation(
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) return;
+          _navigateTo(context, index);
+        },
+      ),
+    );
+  }
+
+  void _navigateTo(BuildContext context, int index) {
+    final routes = [
+      () => const HomeScreen(),
+      () => const GameScreen(),
+      () => const CodexScreen(),
+      () => const ProfileScreen(),
+    ];
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => routes[index]()!),
     );
   }
 }

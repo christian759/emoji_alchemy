@@ -3,7 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/game_state.dart';
 import 'theme/app_theme.dart';
+import 'ui/screens/codex_screen.dart';
+import 'ui/screens/daily_puzzle_screen.dart';
+import 'ui/screens/game_screen.dart';
 import 'ui/screens/home_screen.dart';
+import 'ui/screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +29,14 @@ class EmojiAlchemyApp extends StatelessWidget {
         title: 'Emoji Alchemy',
         theme: AppTheme.parchmentTheme,
         debugShowCheckedModeBanner: false,
-        home: const HomeScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (_) => const HomeScreen(),
+          '/lab': (_) => const GameScreen(),
+          '/codex': (_) => const CodexScreen(),
+          '/profile': (_) => const ProfileScreen(),
+          '/daily': (_) => const DailyPuzzleScreen(),
+        },
       ),
     );
   }

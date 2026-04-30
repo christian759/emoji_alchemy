@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../widgets/app_bottom_navigation.dart';
 import '../widgets/canvas_area.dart';
 import '../widgets/collection_tray.dart';
+import '../../providers/game_state.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -31,9 +34,14 @@ class GameScreen extends StatelessWidget {
                         style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        '187 discovered',
-                        style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF7A5D42)),
+                      Builder(
+                        builder: (context) {
+                          final gameState = Provider.of<GameState>(context);
+                          return Text(
+                            '${gameState.discoveriesCount} discovered',
+                            style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF7A5D42)),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -108,7 +116,19 @@ class GameScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: AppBottomNavigation(
+        currentIndex: 1,
+        onTap: (index) {
+          if (index == 1) return;
+          _navigateTo(context, index);
+        },
+      ),
     );
+  }
+
+  void _navigateTo(BuildContext context, int index) {
+    final routeNames = ['/', '/lab', '/codex', '/profile'];
+    Navigator.of(context).pushReplacementNamed(routeNames[index]);
   }
 }
 
