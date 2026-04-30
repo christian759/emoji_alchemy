@@ -229,6 +229,14 @@ class GameState extends ChangeNotifier {
         return 'Magic likes to mingle with ancient or elemental forces; experiment freely.';
       case ElementCategory.space:
         return 'Space elements open cosmic paths when paired with lightning or charged matter.';
+      case ElementCategory.base:
+      case ElementCategory.weather:
+      case ElementCategory.animals:
+      case ElementCategory.human:
+      case ElementCategory.food:
+      case ElementCategory.mythology:
+      case ElementCategory.other:
+        return 'Keep exploring combinations based on what you already have — the next discovery is nearby.';
     }
   }
 

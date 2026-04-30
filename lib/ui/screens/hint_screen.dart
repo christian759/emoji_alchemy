@@ -79,7 +79,7 @@ class HintScreen extends StatelessWidget {
                 Expanded(
                   child: ListView.separated(
                     itemCount: suggestions.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 14),
+                    separatorBuilder: (context, index) => const SizedBox(height: 14),
                     itemBuilder: (context, index) {
                       return Container(
                         padding: const EdgeInsets.all(18),
