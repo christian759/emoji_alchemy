@@ -24,7 +24,7 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
     super.initState();
     // Center the initial view
     _transformationController.value = Matrix4.identity()
-      ..translate(-(_canvasSize / 2) + 200, -(_canvasSize / 2) + 300);
+      ..translateByVector3(Vector3(-(_canvasSize / 2) + 200, -(_canvasSize / 2) + 300, 0));
   }
 
   void _checkCombinations(String dragId, double x, double y) {

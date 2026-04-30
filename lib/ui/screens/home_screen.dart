@@ -224,7 +224,7 @@ class _ActionTile extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
 
-  const _ActionTile({super.key, required this.icon, required this.label, required this.onTap});
+  const _ActionTile({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +256,7 @@ class _NavItem extends StatelessWidget {
   final String label;
   final bool active;
 
-  const _NavItem({super.key, required this.icon, required this.label, this.active = false});
+  const _NavItem({required this.icon, required this.label, this.active = false});
 
   @override
   Widget build(BuildContext context) {

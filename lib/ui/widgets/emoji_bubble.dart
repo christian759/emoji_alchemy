@@ -26,11 +26,11 @@ class EmojiBubble extends StatelessWidget {
           color: borderColor,
           width: 2,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Color(0x1F000000),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),

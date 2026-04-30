@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData get parchmentTheme {
-    final base = ThemeData.light();
-    return base.copyWith(
+    return ThemeData(
       brightness: Brightness.light,
       primaryColor: const Color(0xFF8A4F2B),
       scaffoldBackgroundColor: const Color(0xFFF3E7D6),
@@ -61,7 +60,6 @@ class AppTheme {
         primary: Color(0xFF8A4F2B),
         secondary: Color(0xFFD79C55),
         surface: Color(0xFFF7E8D2),
-        background: Color(0xFFF3E7D6),
         onPrimary: Colors.white,
         onSecondary: Color(0xFF2E241A),
         onSurface: Color(0xFF2E241A),
