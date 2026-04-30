@@ -15,16 +15,24 @@ class EmojiBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = Theme.of(context).dividerColor;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        shape: BoxShape.circle,
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: Theme.of(context).primaryColor,
-          width: 3,
+          color: borderColor,
+          width: 2,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       alignment: Alignment.center,
       child: Column(
@@ -34,10 +42,12 @@ class EmojiBubble extends StatelessWidget {
             element.emoji,
             style: TextStyle(fontSize: size * 0.4),
           ),
-          if (size >= 80) // Only show text if it's large enough (e.g. in tray)
+          if (size >= 80)
+            const SizedBox(height: 6),
+          if (size >= 80)
             Text(
               element.name,
-              style: const TextStyle(fontSize: 10, color: Colors.white70),
+              style: const TextStyle(fontSize: 10, color: Color(0xFFF2E7D6)),
               overflow: TextOverflow.ellipsis,
             )
         ],

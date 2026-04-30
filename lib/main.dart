@@ -23,7 +23,7 @@ class EmojiAlchemyApp extends StatelessWidget {
       create: (_) => GameState(prefs),
       child: MaterialApp(
         title: 'Emoji Alchemy',
-        theme: AppTheme.darkTheme,
+        theme: AppTheme.parchmentTheme,
         debugShowCheckedModeBanner: false,
         home: const HomeScreen(),
       ),

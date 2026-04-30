@@ -92,11 +92,14 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
                   children: [
                     // Grid background
                     Positioned.fill(
-                      child: GridPaper(
-                        color: Colors.white10,
-                        divisions: 1,
-                        subdivisions: 1,
-                        interval: 100,
+                      child: Container(
+                        color: Theme.of(context).canvasColor,
+                        child: const GridPaper(
+                          color: Color(0xFFD8C7A8),
+                          divisions: 1,
+                          subdivisions: 1,
+                          interval: 100,
+                        ),
                       ),
                     ),
                     // Current Elements on Canvas

@@ -9,25 +9,25 @@ class CollectionTray extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: const Border(
-          top: BorderSide(color: Colors.white24, width: 2),
+        color: theme.scaffoldBackgroundColor,
+        border: Border(
+          top: BorderSide(color: const Color(0xFFD7B78E), width: 1.5),
         ),
       ),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Consumer<GameState>(
         builder: (context, gameState, child) {
           final discoveredElements = gameState.discoveredElements
               .map((id) => ElementData.elements[id]!)
               .toList();
-          
-          // Sort or group by category if desired
           discoveredElements.sort((a, b) => a.category.index.compareTo(b.category.index));
 
           return ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: discoveredElements.length,
             itemBuilder: (context, index) {
               final element = discoveredElements[index];
@@ -40,7 +40,7 @@ class CollectionTray extends StatelessWidget {
                     child: EmojiBubble(element: element, size: 80),
                   ),
                   childWhenDragging: Opacity(
-                    opacity: 0.3,
+                    opacity: 0.4,
                     child: EmojiBubble(element: element, size: 80),
                   ),
                   child: EmojiBubble(element: element, size: 80),

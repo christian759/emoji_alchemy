@@ -10,120 +10,269 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cardColor = theme.cardColor;
+    final accent = theme.colorScheme.secondary;
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: Consumer<GameState>(
         builder: (context, gameState, child) {
           return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 40),
-                  // App Title
                   Text(
-                    'Emoji Alchemy',
-                    style: Theme.of(context).textTheme.displayLarge,
-                    textAlign: TextAlign.center,
-                  ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
-                  const SizedBox(height: 16),
-                  
-                  // Rank Badge
+                    'THE GREAT LAB',
+                    style: theme.textTheme.bodySmall?.copyWith(letterSpacing: 1.5, color: const Color(0xFF7A5D42)),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.end,
+                    spacing: 8,
+                    children: [
+                      Text(
+                        'Emoji',
+                        style: theme.textTheme.displayLarge,
+                      ),
+                      Text(
+                        'Alchemy',
+                        style: theme.textTheme.displayLarge?.copyWith(color: accent),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                    padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Theme.of(context).primaryColor, width: 3),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Current Rank',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.white54),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          gameState.currentRank,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: const Color(0xFFB89672), width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 14,
+                          offset: const Offset(0, 10),
                         ),
                       ],
                     ),
-                  ).animate().scale(delay: 300.ms, duration: 400.ms, curve: Curves.easeOutBack),
-                  
-                  const SizedBox(height: 40),
-                  
-                  // Discovery Progress
-                  Text(
-                    'Discoveries',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: gameState.discoveriesCount / gameState.maxDiscoveries,
-                    backgroundColor: Colors.white24,
-                    color: Theme.of(context).primaryColor,
-                    minHeight: 16,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${gameState.discoveriesCount} / ${gameState.maxDiscoveries} Elements Found',
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                  
-                  const Spacer(),
-                  
-                  // Play Button
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => const GameScreen()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'TODAY · DAY 142',
+                              style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFD2B692), letterSpacing: 1.2),
                             ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF4A382C),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Text(
+                                '3 hints',
+                                style: theme.textTheme.bodySmall?.copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Steam Engine Run',
+                          style: theme.textTheme.titleLarge?.copyWith(color: Colors.white, fontSize: 28),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Reach 🔥 + 💧 in 6 steps',
+                          style: theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFFCEB292)),
+                        ),
+                        const SizedBox(height: 26),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => const GameScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: accent,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            ),
+                            child: const Icon(Icons.arrow_forward),
                           ),
-                          child: const Text('ENTER LAB', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ).animate(onPlay: (c) => c.repeat(reverse: true))
-                         .scaleXY(end: 1.05, duration: 1.seconds, curve: Curves.easeInOut),
+                        ),
+                      ],
+                    ),
+                  ).animate().fadeIn(duration: 600.ms),
+
+                  const SizedBox(height: 24),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                    decoration: BoxDecoration(
+                      color: theme.canvasColor,
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: const Color(0xFFD7B78E), width: 1.4),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Chris_Alch · Sage',
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: const Color(0xFF4A3726)),
+                        ),
+                        const SizedBox(height: 10),
+                        LinearProgressIndicator(
+                          value: gameState.discoveriesCount / gameState.maxDiscoveries,
+                          backgroundColor: Colors.white70,
+                          color: accent,
+                          minHeight: 10,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          '${gameState.discoveriesCount} / ${gameState.maxDiscoveries} discovered',
+                          style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFF5E4A3D)),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: [
+                      _ActionTile(
+                        icon: Icons.science,
+                        label: 'Sandbox',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const GameScreen()),
+                          );
+                        },
                       ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: () {
+                      _ActionTile(
+                        icon: Icons.calendar_today,
+                        label: 'Daily',
+                        onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => const DailyPuzzleScreen()),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white12,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: const Icon(Icons.extension),
+                      ),
+                      _ActionTile(
+                        icon: Icons.book,
+                        label: 'Codex',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const DailyPuzzleScreen()),
+                          );
+                        },
+                      ),
+                      _ActionTile(
+                        icon: Icons.person,
+                        label: 'Profile',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const DailyPuzzleScreen()),
+                          );
+                        },
                       ),
                     ],
                   ),
-                  
-                  const SizedBox(height: 40),
+
+                  const SizedBox(height: 28),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFB89672), width: 1.2),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: const [
+                        _NavItem(icon: Icons.home, label: 'Home', active: true),
+                        _NavItem(icon: Icons.science, label: 'Lab'),
+                        _NavItem(icon: Icons.book, label: 'Codex'),
+                        _NavItem(icon: Icons.person, label: 'Profile'),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _ActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionTile({super.key, required this.icon, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: (MediaQuery.of(context).size.width - 88) / 2,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          color: theme.canvasColor,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFD7B78E), width: 1),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: const Color(0xFF8A4F2B), size: 28),
+            const SizedBox(height: 12),
+            Text(label, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool active;
+
+  const _NavItem({super.key, required this.icon, required this.label, this.active = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: active ? theme.colorScheme.secondary : const Color(0xFF8A4F2B)),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: active ? theme.colorScheme.secondary : const Color(0xFF7A5D42),
+          ),
+        ),
+      ],
     );
   }
 }
