@@ -10,7 +10,7 @@ class GameState extends ChangeNotifier {
   final Uuid _uuid = const Uuid();
 
   Set<String> _discoveredElements = {};
-  List<PlacedElement> _canvasElements = [];
+  final List<PlacedElement> _canvasElements = [];
   
   // Stats
   int get discoveriesCount => _discoveredElements.length;

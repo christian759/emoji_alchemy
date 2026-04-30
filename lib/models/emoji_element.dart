@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'element_category.dart';
 
 class EmojiElement {
