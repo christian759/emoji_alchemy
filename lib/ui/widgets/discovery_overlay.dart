@@ -16,7 +16,11 @@ class DiscoveryOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
-    final hintText = Provider.of<GameState>(context, listen: false).unlockHintFor(outcome.result);
+    final gameState = Provider.of<GameState>(context, listen: false);
+    final hintText = gameState.unlockHintFor(outcome.result);
+    final recipeText = '${outcome.ingredientA.emoji} ${outcome.ingredientA.name} + '
+        '${outcome.ingredientB.emoji} ${outcome.ingredientB.name} = '
+        '${outcome.result.emoji} ${outcome.result.name}';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -71,8 +75,9 @@ class DiscoveryOverlay extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    '${outcome.ingredientA.emoji} + ${outcome.ingredientB.emoji} = ${outcome.result.emoji}',
+                    recipeText,
                     style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -101,7 +106,12 @@ class DiscoveryOverlay extends StatelessWidget {
                     navigator.pop();
                     Future.microtask(() {
                       navigator.push(
-                        MaterialPageRoute(builder: (_) => DiscoveryScreen(element: outcome.result)),
+                        MaterialPageRoute(
+                          builder: (_) => DiscoveryScreen(
+                            element: outcome.result,
+                            outcome: outcome,
+                          ),
+                        ),
                       );
                     });
                   },

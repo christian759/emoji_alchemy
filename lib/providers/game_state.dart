@@ -20,6 +20,22 @@ class CombinationOutcome {
   });
 }
 
+class LabHint {
+  final String title;
+  final String detail;
+  final String badge;
+  final String? recipe;
+  final String? targetElementId;
+
+  const LabHint({
+    required this.title,
+    required this.detail,
+    required this.badge,
+    this.recipe,
+    this.targetElementId,
+  });
+}
+
 class GameState extends ChangeNotifier {
   final SharedPreferences _prefs;
   final Uuid _uuid = const Uuid();
@@ -27,6 +43,7 @@ class GameState extends ChangeNotifier {
   Set<String> _discoveredElements = {};
   final List<PlacedElement> _canvasElements = [];
   int _hintsRemaining = 3;
+  LabHint? _activeHint;
   
   // Stats
   int get discoveriesCount => _discoveredElements.length;
@@ -35,6 +52,7 @@ class GameState extends ChangeNotifier {
 
   Set<String> get discoveredElements => _discoveredElements;
   List<PlacedElement> get canvasElements => _canvasElements;
+  LabHint? get activeHint => _activeHint;
 
   List<EmojiElement> get discoveredElementList {
     final list = _discoveredElements
@@ -154,81 +172,220 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> get hintSuggestions {
-    final suggestions = <String>[];
-    final discovered = _discoveredElements;
+  LabHint? useHint() {
+    if (_hintsRemaining <= 0) return null;
+    _hintsRemaining--;
+    final hints = _buildHints(limit: 1);
+    _activeHint = hints.isNotEmpty ? hints.first : _fallbackHint();
+    _saveProgress();
+    notifyListeners();
+    return _activeHint;
+  }
 
-    final candidateCombos = ElementData.combinations.where((combo) {
-      final result = ElementData.elements[combo.result];
-      if (result == null || discovered.contains(result.id)) return false;
-      final hasOne = discovered.contains(combo.element1);
-      final hasTwo = discovered.contains(combo.element2);
-      return hasOne || hasTwo;
-    }).toList();
-
-    candidateCombos.sort((a, b) {
-      final matchA = (discovered.contains(a.element1) ? 1 : 0) + (discovered.contains(a.element2) ? 1 : 0);
-      final matchB = (discovered.contains(b.element1) ? 1 : 0) + (discovered.contains(b.element2) ? 1 : 0);
-      return matchB.compareTo(matchA);
-    });
-
-    for (var combo in candidateCombos.take(5)) {
-      final result = ElementData.elements[combo.result]!;
-      final element1 = ElementData.elements[combo.element1]!;
-      final element2 = ElementData.elements[combo.element2]!;
-      final hasOne = discovered.contains(combo.element1);
-      final hasTwo = discovered.contains(combo.element2);
-
-      if (hasOne && hasTwo) {
-        suggestions.add('Combine ${element1.name} and ${element2.name} to discover ${result.name}.');
-      } else if (hasOne) {
-        final missing = hasOne ? element2 : element1;
-        final known = hasOne ? element1 : element2;
-        suggestions.add('Pair ${known.name} with ${missing.name} to unlock ${result.name}.');
-      } else {
-        suggestions.add('Look for ${element1.name} or ${element2.name} to make ${result.name}.');
-      }
-    }
-
-    if (suggestions.isEmpty) {
-      if (discoveriesCount < 8) {
-        suggestions.add('Start by combining basic elements like Fire, Water, Earth, or Wood to grow your repertoire.');
-        suggestions.add('Try pairing elements from the same category to reveal hidden formations.');
-      } else if (discoveriesCount < 18) {
-        suggestions.add('Search for combinations that use what you already know — one new item is often enough.');
-        suggestions.add('Every new discovery makes the next one easier to find. Keep experimenting.');
-      } else {
-        suggestions.add('You are close to mastery — focus on rare categories like Magic and Space.');
-        suggestions.add('Revisit older discoveries and try combining them with new elements to unveil deeper secrets.');
-      }
-    }
-
-    return suggestions;
+  List<LabHint> get hintSuggestions {
+    return _buildHints(limit: 5);
   }
 
   String unlockHintFor(EmojiElement element) {
-    final relatedCombos = ElementData.combinations.where((combo) =>
-      combo.element1 == element.id || combo.element2 == element.id
-    ).toList();
+    return buildDiscoveryHints(element, limit: 1).first.detail;
+  }
 
-    for (var combo in relatedCombos) {
+  List<Combination> recipesForResult(String resultId) {
+    return ElementData.combinations
+        .where((combo) => combo.result == resultId)
+        .toList();
+  }
+
+  Combination? combinationForElements(String elementId1, String elementId2) {
+    for (final combo in ElementData.combinations) {
+      if (combo.matches(elementId1, elementId2)) {
+        return combo;
+      }
+    }
+    return null;
+  }
+
+  String recipeText(Combination combo) {
+    final element1 = ElementData.elements[combo.element1]!;
+    final element2 = ElementData.elements[combo.element2]!;
+    final result = ElementData.elements[combo.result]!;
+    return '${element1.emoji} ${element1.name} + ${element2.emoji} ${element2.name} = ${result.emoji} ${result.name}';
+  }
+
+  List<LabHint> buildDiscoveryHints(EmojiElement element, {int limit = 3}) {
+    final exactMatches = <LabHint>[];
+    final almostMatches = <LabHint>[];
+
+    for (final combo in ElementData.combinations) {
+      if (combo.element1 != element.id && combo.element2 != element.id) continue;
       final otherId = combo.element1 == element.id ? combo.element2 : combo.element1;
       final otherElement = ElementData.elements[otherId]!;
       final result = ElementData.elements[combo.result]!;
-      if (!_discoveredElements.contains(result.id)) {
-        return 'Try pairing ${element.name} with ${otherElement.name} to discover ${result.name}.';
+
+      if (_discoveredElements.contains(result.id)) continue;
+
+      final knowsOther = _discoveredElements.contains(otherId);
+      final recipe = recipeText(combo);
+      if (knowsOther) {
+        exactMatches.add(LabHint(
+          title: '${result.name} is ready',
+          detail: 'You already own ${element.name} and ${otherElement.name}, so try this mix next.',
+          badge: 'CAN MAKE NOW',
+          recipe: recipe,
+          targetElementId: result.id,
+        ));
+      } else {
+        almostMatches.add(LabHint(
+          title: 'Use ${element.name} again',
+          detail: 'Find ${otherElement.name} and pair it with ${element.name} to discover ${result.name}.',
+          badge: 'ONE MORE INGREDIENT',
+          recipe: recipe,
+          targetElementId: result.id,
+        ));
       }
     }
 
+    final hints = <LabHint>[
+      ...exactMatches,
+      ...almostMatches,
+    ];
+
+    if (hints.isEmpty) {
+      hints.add(_categoryHintFor(element));
+    }
+
+    return hints.take(limit).toList();
+  }
+
+  CombinationOutcome? attemptCombination(String id1, String id2, double spawnX, double spawnY) {
+    final e1 = _canvasElements.firstWhere((e) => e.id == id1).element.id;
+    final e2 = _canvasElements.firstWhere((e) => e.id == id2).element.id;
+
+    final combo = combinationForElements(e1, e2);
+    if (combo != null) {
+      removeElement(id1);
+      removeElement(id2);
+
+      final resultElement = ElementData.elements[combo.result]!;
+      addToCanvas(resultElement, spawnX, spawnY);
+
+      final wasNew = !_discoveredElements.contains(resultElement.id);
+      if (wasNew) {
+        _discoveredElements.add(resultElement.id);
+        _saveProgress();
+      }
+
+      return CombinationOutcome(
+        result: resultElement,
+        ingredientA: ElementData.elements[combo.element1]!,
+        ingredientB: ElementData.elements[combo.element2]!,
+        wasNewDiscovery: wasNew,
+      );
+    }
+    return null;
+  }
+
+  List<LabHint> _buildHints({int limit = 5}) {
+    final ready = <LabHint>[];
+    final almost = <LabHint>[];
+    final discovered = _discoveredElements;
+
+    for (final combo in ElementData.combinations) {
+      final result = ElementData.elements[combo.result];
+      if (result == null || discovered.contains(result.id)) continue;
+
+      final hasOne = discovered.contains(combo.element1);
+      final hasTwo = discovered.contains(combo.element2);
+      if (!hasOne && !hasTwo) continue;
+
+      final element1 = ElementData.elements[combo.element1]!;
+      final element2 = ElementData.elements[combo.element2]!;
+      final recipe = recipeText(combo);
+
+      if (hasOne && hasTwo) {
+        ready.add(LabHint(
+          title: '${result.name} is waiting',
+          detail: 'Drop ${element1.name} onto ${element2.name} in the lab right now.',
+          badge: 'READY NOW',
+          recipe: recipe,
+          targetElementId: result.id,
+        ));
+      } else {
+        final known = hasOne ? element1 : element2;
+        final missing = hasOne ? element2 : element1;
+        almost.add(LabHint(
+          title: 'One piece missing',
+          detail: 'You already have ${known.name}. Find ${missing.name} to unlock ${result.name}.',
+          badge: 'SETUP HINT',
+          recipe: recipe,
+          targetElementId: result.id,
+        ));
+      }
+    }
+
+    ready.sort((a, b) => a.title.compareTo(b.title));
+    almost.sort((a, b) => a.title.compareTo(b.title));
+
+    final hints = <LabHint>[
+      ...ready,
+      ...almost,
+    ];
+
+    if (hints.isEmpty) {
+      hints.add(_fallbackHint());
+    }
+
+    return hints.take(limit).toList();
+  }
+
+  LabHint _fallbackHint() {
+    if (discoveriesCount < 8) {
+      return const LabHint(
+        title: 'Start with the basics',
+        detail: 'Mix your base elements together first. Fire, Water, Earth, and Wind still hide several early discoveries.',
+        badge: 'EARLY GAME',
+      );
+    }
+    if (discoveriesCount < 18) {
+      return const LabHint(
+        title: 'Chain your discoveries',
+        detail: 'Try your newest discoveries with the elements you already trust. One fresh ingredient often unlocks several more.',
+        badge: 'MID GAME',
+      );
+    }
+    return const LabHint(
+      title: 'Hunt rare branches',
+      detail: 'You are deep into the codex now. Revisit Space and Magic ingredients to uncover the harder late-game recipes.',
+      badge: 'LATE GAME',
+    );
+  }
+
+  LabHint _categoryHintFor(EmojiElement element) {
     switch (element.category) {
       case ElementCategory.nature:
-        return 'Nature elements thrive when mixed with water, light, or earth-based forms.';
+        return const LabHint(
+          title: 'Nature likes growth',
+          detail: 'Nature discoveries usually branch with water, sunlight, and fertile earth. Keep trying soft elemental pairs.',
+          badge: 'CATEGORY CLUE',
+        );
       case ElementCategory.technology:
-        return 'Technology often unlocks stronger constructs when combined with energy or crafted materials.';
+        return const LabHint(
+          title: 'Power it up',
+          detail: 'Technology tends to expand once you add electricity, metal, or crafted tools.',
+          badge: 'CATEGORY CLUE',
+        );
       case ElementCategory.magic:
-        return 'Magic likes to mingle with ancient or elemental forces; experiment freely.';
+        return const LabHint(
+          title: 'Magic needs catalysts',
+          detail: 'Magical items often wake up when mixed with rare gems, moonlight, or human-made knowledge.',
+          badge: 'CATEGORY CLUE',
+        );
       case ElementCategory.space:
-        return 'Space elements open cosmic paths when paired with lightning or charged matter.';
+        return const LabHint(
+          title: 'Think bigger',
+          detail: 'Space discoveries usually evolve through storms, stars, and powerful energy sources.',
+          badge: 'CATEGORY CLUE',
+        );
       case ElementCategory.base:
       case ElementCategory.weather:
       case ElementCategory.animals:
@@ -236,36 +393,11 @@ class GameState extends ChangeNotifier {
       case ElementCategory.food:
       case ElementCategory.mythology:
       case ElementCategory.other:
-        return 'Keep exploring combinations based on what you already have — the next discovery is nearby.';
-    }
-  }
-
-  CombinationOutcome? attemptCombination(String id1, String id2, double spawnX, double spawnY) {
-    final e1 = _canvasElements.firstWhere((e) => e.id == id1).element.id;
-    final e2 = _canvasElements.firstWhere((e) => e.id == id2).element.id;
-
-    for (var combo in ElementData.combinations) {
-      if (combo.matches(e1, e2)) {
-        removeElement(id1);
-        removeElement(id2);
-
-        final resultElement = ElementData.elements[combo.result]!;
-        addToCanvas(resultElement, spawnX, spawnY);
-
-        final wasNew = !_discoveredElements.contains(resultElement.id);
-        if (wasNew) {
-          _discoveredElements.add(resultElement.id);
-          _saveProgress();
-        }
-
-        return CombinationOutcome(
-          result: resultElement,
-          ingredientA: ElementData.elements[combo.element1]!,
-          ingredientB: ElementData.elements[combo.element2]!,
-          wasNewDiscovery: wasNew,
+        return const LabHint(
+          title: 'Keep exploring',
+          detail: 'This discovery still connects to more recipes. Try it with both old basics and your newest unlocked elements.',
+          badge: 'CATEGORY CLUE',
         );
-      }
     }
-    return null;
   }
 }

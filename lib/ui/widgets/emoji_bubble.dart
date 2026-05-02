@@ -4,33 +4,51 @@ import '../../models/emoji_element.dart';
 class EmojiBubble extends StatelessWidget {
   final EmojiElement element;
   final double size;
-  final bool isAnimated;
+  final bool highlighted;
+  final bool compactLabel;
+  final Color? accentColor;
 
   const EmojiBubble({
     super.key,
     required this.element,
     this.size = 60,
-    this.isAnimated = false,
+    this.highlighted = false,
+    this.compactLabel = false,
+    this.accentColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final borderColor = Theme.of(context).dividerColor;
-    return Container(
+    final glowColor = accentColor ?? Theme.of(context).colorScheme.secondary;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(24),
+        color: highlighted ? const Color(0xFF3A2B20) : Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(size * 0.3),
         border: Border.all(
-          color: borderColor,
-          width: 2,
+          color: highlighted ? glowColor : borderColor,
+          width: highlighted ? 2.6 : 2,
         ),
-        boxShadow: const [
+        gradient: highlighted
+            ? const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF4C3726),
+                  Color(0xFF2A1E15),
+                ],
+              )
+            : null,
+        boxShadow: [
           BoxShadow(
-            color: Color(0x1F000000),
-            blurRadius: 10,
-            offset: Offset(0, 4),
+            color: highlighted ? glowColor.withOpacity(0.28) : const Color(0x1F000000),
+            blurRadius: highlighted ? 18 : 10,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -40,16 +58,25 @@ class EmojiBubble extends StatelessWidget {
         children: [
           Text(
             element.emoji,
-            style: TextStyle(fontSize: size * 0.4),
+            style: TextStyle(fontSize: compactLabel ? size * 0.44 : size * 0.4),
           ),
+          if (size >= 80) SizedBox(height: compactLabel ? 4 : 6),
           if (size >= 80)
-            const SizedBox(height: 6),
-          if (size >= 80)
-            Text(
-              element.name,
-              style: const TextStyle(fontSize: 10, color: Color(0xFFF2E7D6)),
-              overflow: TextOverflow.ellipsis,
-            )
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Text(
+                element.name,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: compactLabel ? 9 : 10,
+                  color: const Color(0xFFF2E7D6),
+                  fontWeight: highlighted ? FontWeight.w700 : FontWeight.w500,
+                  letterSpacing: compactLabel ? 0.1 : 0,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
         ],
       ),
     );
