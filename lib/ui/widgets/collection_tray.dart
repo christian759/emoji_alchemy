@@ -47,24 +47,27 @@ class CollectionTray extends StatelessWidget {
                     color: Colors.transparent,
                     child: EmojiBubble(
                       element: element,
-                      size: 84,
+                      size: 76,
                       highlighted: true,
                       compactLabel: true,
                       accentColor: const Color(0xFFE1B26C),
+                      showLabel: false,
                     ),
                   ),
                   childWhenDragging: Opacity(
                     opacity: 0.4,
                     child: EmojiBubble(
                       element: element,
-                      size: 80,
+                      size: 72,
                       compactLabel: true,
+                      showLabel: false,
                     ),
                   ),
                   child: EmojiBubble(
                     element: element,
-                    size: 80,
+                    size: 72,
                     compactLabel: true,
+                    showLabel: false,
                   ),
                 ).animate().fadeIn(
                   delay: Duration(milliseconds: (index % 6) * 55),

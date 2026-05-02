@@ -7,6 +7,7 @@ class EmojiBubble extends StatelessWidget {
   final bool highlighted;
   final bool compactLabel;
   final Color? accentColor;
+  final bool showLabel;
 
   const EmojiBubble({
     super.key,
@@ -15,6 +16,7 @@ class EmojiBubble extends StatelessWidget {
     this.highlighted = false,
     this.compactLabel = false,
     this.accentColor,
+    this.showLabel = true,
   });
 
   @override
@@ -61,8 +63,8 @@ class EmojiBubble extends StatelessWidget {
             element.emoji,
             style: TextStyle(fontSize: compactLabel ? size * 0.44 : size * 0.4),
           ),
-          if (size >= 80) SizedBox(height: compactLabel ? 4 : 6),
-          if (size >= 80)
+          if (showLabel && size >= 80) SizedBox(height: compactLabel ? 4 : 6),
+          if (showLabel && size >= 80)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Text(
