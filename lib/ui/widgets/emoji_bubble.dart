@@ -28,7 +28,9 @@ class EmojiBubble extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: highlighted ? const Color(0xFF3A2B20) : Theme.of(context).cardColor,
+        color: highlighted
+            ? const Color(0xFF3A2B20)
+            : Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(size * 0.3),
         border: Border.all(
           color: highlighted ? glowColor : borderColor,
@@ -38,15 +40,14 @@ class EmojiBubble extends StatelessWidget {
             ? const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF4C3726),
-                  Color(0xFF2A1E15),
-                ],
+                colors: [Color(0xFF4C3726), Color(0xFF2A1E15)],
               )
             : null,
         boxShadow: [
           BoxShadow(
-            color: highlighted ? glowColor.withOpacity(0.28) : const Color(0x1F000000),
+            color: highlighted
+                ? glowColor.withValues(alpha: 0.28)
+                : const Color(0x1F000000),
             blurRadius: highlighted ? 18 : 10,
             offset: const Offset(0, 6),
           ),

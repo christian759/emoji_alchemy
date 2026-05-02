@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import '../models/combination.dart';
 import '../models/emoji_element.dart';
 import '../models/element_category.dart';
 import '../models/placed_element.dart';
@@ -44,7 +45,7 @@ class GameState extends ChangeNotifier {
   final List<PlacedElement> _canvasElements = [];
   int _hintsRemaining = 3;
   LabHint? _activeHint;
-  
+
   // Stats
   int get discoveriesCount => _discoveredElements.length;
   int get maxDiscoveries => ElementData.elements.length;
@@ -62,7 +63,8 @@ class GameState extends ChangeNotifier {
     return list;
   }
 
-  int get completionPercent => ((discoveriesCount / maxDiscoveries) * 100).round();
+  int get completionPercent =>
+      ((discoveriesCount / maxDiscoveries) * 100).round();
 
   int get currentStreak => _prefs.getInt('dayStreak') ?? 14;
 
@@ -82,12 +84,17 @@ class GameState extends ChangeNotifier {
     }
     final totalByCategory = <ElementCategory, int>{};
     for (var element in ElementData.elements.values) {
-      totalByCategory[element.category] = (totalByCategory[element.category] ?? 0) + 1;
+      totalByCategory[element.category] =
+          (totalByCategory[element.category] ?? 0) + 1;
     }
     final entries = discoveredElementList.toList();
     entries.sort((a, b) {
-      final remainingA = (totalByCategory[a.category] ?? 0) - (discoveredByCategory[a.category] ?? 0);
-      final remainingB = (totalByCategory[b.category] ?? 0) - (discoveredByCategory[b.category] ?? 0);
+      final remainingA =
+          (totalByCategory[a.category] ?? 0) -
+          (discoveredByCategory[a.category] ?? 0);
+      final remainingB =
+          (totalByCategory[b.category] ?? 0) -
+          (discoveredByCategory[b.category] ?? 0);
       if (remainingA != remainingB) {
         return remainingA.compareTo(remainingB);
       }
@@ -142,12 +149,9 @@ class GameState extends ChangeNotifier {
   }
 
   void addToCanvas(EmojiElement element, double x, double y) {
-    _canvasElements.add(PlacedElement(
-      id: _uuid.v4(),
-      element: element,
-      x: x,
-      y: y,
-    ));
+    _canvasElements.add(
+      PlacedElement(id: _uuid.v4(), element: element, x: x, y: y),
+    );
     notifyListeners();
   }
 
@@ -191,9 +195,18 @@ class GameState extends ChangeNotifier {
   }
 
   List<Combination> recipesForResult(String resultId) {
-    return ElementData.combinations
-        .where((combo) => combo.result == resultId)
-        .toList();
+    final seen = <String>{};
+    final matches = <Combination>[];
+
+    for (final combo in ElementData.combinations) {
+      if (combo.result != resultId) continue;
+      final key = _comboKey(combo.element1, combo.element2, combo.result);
+      if (seen.add(key)) {
+        matches.add(combo);
+      }
+    }
+
+    return matches;
   }
 
   Combination? combinationForElements(String elementId1, String elementId2) {
@@ -215,10 +228,17 @@ class GameState extends ChangeNotifier {
   List<LabHint> buildDiscoveryHints(EmojiElement element, {int limit = 3}) {
     final exactMatches = <LabHint>[];
     final almostMatches = <LabHint>[];
+    final seen = <String>{};
 
     for (final combo in ElementData.combinations) {
-      if (combo.element1 != element.id && combo.element2 != element.id) continue;
-      final otherId = combo.element1 == element.id ? combo.element2 : combo.element1;
+      if (combo.element1 != element.id && combo.element2 != element.id) {
+        continue;
+      }
+      final key = _comboKey(combo.element1, combo.element2, combo.result);
+      if (!seen.add(key)) continue;
+      final otherId = combo.element1 == element.id
+          ? combo.element2
+          : combo.element1;
       final otherElement = ElementData.elements[otherId]!;
       final result = ElementData.elements[combo.result]!;
 
@@ -227,28 +247,31 @@ class GameState extends ChangeNotifier {
       final knowsOther = _discoveredElements.contains(otherId);
       final recipe = recipeText(combo);
       if (knowsOther) {
-        exactMatches.add(LabHint(
-          title: '${result.name} is ready',
-          detail: 'You already own ${element.name} and ${otherElement.name}, so try this mix next.',
-          badge: 'CAN MAKE NOW',
-          recipe: recipe,
-          targetElementId: result.id,
-        ));
+        exactMatches.add(
+          LabHint(
+            title: '${result.name} is ready',
+            detail:
+                'You already own ${element.name} and ${otherElement.name}, so try this mix next.',
+            badge: 'CAN MAKE NOW',
+            recipe: recipe,
+            targetElementId: result.id,
+          ),
+        );
       } else {
-        almostMatches.add(LabHint(
-          title: 'Use ${element.name} again',
-          detail: 'Find ${otherElement.name} and pair it with ${element.name} to discover ${result.name}.',
-          badge: 'ONE MORE INGREDIENT',
-          recipe: recipe,
-          targetElementId: result.id,
-        ));
+        almostMatches.add(
+          LabHint(
+            title: 'Use ${element.name} again',
+            detail:
+                'Find ${otherElement.name} and pair it with ${element.name} to discover ${result.name}.',
+            badge: 'ONE MORE INGREDIENT',
+            recipe: recipe,
+            targetElementId: result.id,
+          ),
+        );
       }
     }
 
-    final hints = <LabHint>[
-      ...exactMatches,
-      ...almostMatches,
-    ];
+    final hints = <LabHint>[...exactMatches, ...almostMatches];
 
     if (hints.isEmpty) {
       hints.add(_categoryHintFor(element));
@@ -257,7 +280,12 @@ class GameState extends ChangeNotifier {
     return hints.take(limit).toList();
   }
 
-  CombinationOutcome? attemptCombination(String id1, String id2, double spawnX, double spawnY) {
+  CombinationOutcome? attemptCombination(
+    String id1,
+    String id2,
+    double spawnX,
+    double spawnY,
+  ) {
     final e1 = _canvasElements.firstWhere((e) => e.id == id1).element.id;
     final e2 = _canvasElements.firstWhere((e) => e.id == id2).element.id;
 
@@ -289,8 +317,13 @@ class GameState extends ChangeNotifier {
     final ready = <LabHint>[];
     final almost = <LabHint>[];
     final discovered = _discoveredElements;
+    final seen = <String>{};
 
     for (final combo in ElementData.combinations) {
+      final key = _comboKey(combo.element1, combo.element2, combo.result);
+      if (!seen.add(key)) {
+        continue;
+      }
       final result = ElementData.elements[combo.result];
       if (result == null || discovered.contains(result.id)) continue;
 
@@ -303,33 +336,36 @@ class GameState extends ChangeNotifier {
       final recipe = recipeText(combo);
 
       if (hasOne && hasTwo) {
-        ready.add(LabHint(
-          title: '${result.name} is waiting',
-          detail: 'Drop ${element1.name} onto ${element2.name} in the lab right now.',
-          badge: 'READY NOW',
-          recipe: recipe,
-          targetElementId: result.id,
-        ));
+        ready.add(
+          LabHint(
+            title: '${result.name} is waiting',
+            detail:
+                'Drop ${element1.name} onto ${element2.name} in the lab right now.',
+            badge: 'READY NOW',
+            recipe: recipe,
+            targetElementId: result.id,
+          ),
+        );
       } else {
         final known = hasOne ? element1 : element2;
         final missing = hasOne ? element2 : element1;
-        almost.add(LabHint(
-          title: 'One piece missing',
-          detail: 'You already have ${known.name}. Find ${missing.name} to unlock ${result.name}.',
-          badge: 'SETUP HINT',
-          recipe: recipe,
-          targetElementId: result.id,
-        ));
+        almost.add(
+          LabHint(
+            title: 'One piece missing',
+            detail:
+                'You already have ${known.name}. Find ${missing.name} to unlock ${result.name}.',
+            badge: 'SETUP HINT',
+            recipe: recipe,
+            targetElementId: result.id,
+          ),
+        );
       }
     }
 
     ready.sort((a, b) => a.title.compareTo(b.title));
     almost.sort((a, b) => a.title.compareTo(b.title));
 
-    final hints = <LabHint>[
-      ...ready,
-      ...almost,
-    ];
+    final hints = <LabHint>[...ready, ...almost];
 
     if (hints.isEmpty) {
       hints.add(_fallbackHint());
@@ -342,20 +378,23 @@ class GameState extends ChangeNotifier {
     if (discoveriesCount < 8) {
       return const LabHint(
         title: 'Start with the basics',
-        detail: 'Mix your base elements together first. Fire, Water, Earth, and Wind still hide several early discoveries.',
+        detail:
+            'Mix your base elements together first. Fire, Water, Earth, and Wind still hide several early discoveries.',
         badge: 'EARLY GAME',
       );
     }
     if (discoveriesCount < 18) {
       return const LabHint(
         title: 'Chain your discoveries',
-        detail: 'Try your newest discoveries with the elements you already trust. One fresh ingredient often unlocks several more.',
+        detail:
+            'Try your newest discoveries with the elements you already trust. One fresh ingredient often unlocks several more.',
         badge: 'MID GAME',
       );
     }
     return const LabHint(
       title: 'Hunt rare branches',
-      detail: 'You are deep into the codex now. Revisit Space and Magic ingredients to uncover the harder late-game recipes.',
+      detail:
+          'You are deep into the codex now. Revisit Space and Magic ingredients to uncover the harder late-game recipes.',
       badge: 'LATE GAME',
     );
   }
@@ -365,25 +404,29 @@ class GameState extends ChangeNotifier {
       case ElementCategory.nature:
         return const LabHint(
           title: 'Nature likes growth',
-          detail: 'Nature discoveries usually branch with water, sunlight, and fertile earth. Keep trying soft elemental pairs.',
+          detail:
+              'Nature discoveries usually branch with water, sunlight, and fertile earth. Keep trying soft elemental pairs.',
           badge: 'CATEGORY CLUE',
         );
       case ElementCategory.technology:
         return const LabHint(
           title: 'Power it up',
-          detail: 'Technology tends to expand once you add electricity, metal, or crafted tools.',
+          detail:
+              'Technology tends to expand once you add electricity, metal, or crafted tools.',
           badge: 'CATEGORY CLUE',
         );
       case ElementCategory.magic:
         return const LabHint(
           title: 'Magic needs catalysts',
-          detail: 'Magical items often wake up when mixed with rare gems, moonlight, or human-made knowledge.',
+          detail:
+              'Magical items often wake up when mixed with rare gems, moonlight, or human-made knowledge.',
           badge: 'CATEGORY CLUE',
         );
       case ElementCategory.space:
         return const LabHint(
           title: 'Think bigger',
-          detail: 'Space discoveries usually evolve through storms, stars, and powerful energy sources.',
+          detail:
+              'Space discoveries usually evolve through storms, stars, and powerful energy sources.',
           badge: 'CATEGORY CLUE',
         );
       case ElementCategory.base:
@@ -395,9 +438,15 @@ class GameState extends ChangeNotifier {
       case ElementCategory.other:
         return const LabHint(
           title: 'Keep exploring',
-          detail: 'This discovery still connects to more recipes. Try it with both old basics and your newest unlocked elements.',
+          detail:
+              'This discovery still connects to more recipes. Try it with both old basics and your newest unlocked elements.',
           badge: 'CATEGORY CLUE',
         );
     }
+  }
+
+  String _comboKey(String element1, String element2, String result) {
+    final ordered = [element1, element2]..sort();
+    return '${ordered.first}:${ordered.last}:$result';
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../providers/game_state.dart';
 import '../../data/element_data.dart';
@@ -10,6 +11,19 @@ class CollectionTray extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final discoveredIds = context.select<GameState, List<String>>((gameState) {
+      final ids = gameState.discoveredElements.toList();
+      ids.sort((a, b) {
+        final elementA = ElementData.elements[a]!;
+        final elementB = ElementData.elements[b]!;
+        final categoryCompare = elementA.category.index.compareTo(
+          elementB.category.index,
+        );
+        if (categoryCompare != 0) return categoryCompare;
+        return elementA.name.compareTo(elementB.name);
+      });
+      return ids;
+    });
     return Container(
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
@@ -18,35 +32,44 @@ class CollectionTray extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Consumer<GameState>(
-        builder: (context, gameState, child) {
-          final discoveredElements = gameState.discoveredElements
-              .map((id) => ElementData.elements[id]!)
-              .toList();
-          discoveredElements.sort((a, b) => a.category.index.compareTo(b.category.index));
-
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: discoveredElements.length,
-            itemBuilder: (context, index) {
-              final element = discoveredElements[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Draggable<String>(
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: discoveredIds.length,
+        itemBuilder: (context, index) {
+          final element = ElementData.elements[discoveredIds[index]]!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child:
+                Draggable<String>(
                   data: element.id,
                   feedback: Material(
                     color: Colors.transparent,
-                    child: EmojiBubble(element: element, size: 80),
+                    child: EmojiBubble(
+                      element: element,
+                      size: 84,
+                      highlighted: true,
+                      compactLabel: true,
+                      accentColor: const Color(0xFFE1B26C),
+                    ),
                   ),
                   childWhenDragging: Opacity(
                     opacity: 0.4,
-                    child: EmojiBubble(element: element, size: 80),
+                    child: EmojiBubble(
+                      element: element,
+                      size: 80,
+                      compactLabel: true,
+                    ),
                   ),
-                  child: EmojiBubble(element: element, size: 80),
+                  child: EmojiBubble(
+                    element: element,
+                    size: 80,
+                    compactLabel: true,
+                  ),
+                ).animate().fadeIn(
+                  delay: Duration(milliseconds: (index % 6) * 55),
+                  duration: 180.ms,
                 ),
-              );
-            },
           );
         },
       ),

@@ -11,11 +11,7 @@ class DiscoveryScreen extends StatelessWidget {
   final EmojiElement element;
   final CombinationOutcome? outcome;
 
-  const DiscoveryScreen({
-    super.key,
-    required this.element,
-    this.outcome,
-  });
+  const DiscoveryScreen({super.key, required this.element, this.outcome});
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +19,37 @@ class DiscoveryScreen extends StatelessWidget {
     final gameState = context.watch<GameState>();
     final recipes = gameState.recipesForResult(element.id);
     final followUpHints = gameState.buildDiscoveryHints(element, limit: 3);
+    final seenUnlocks = <String>{};
     final unlocks = ElementData.combinations
-        .where((combo) => combo.element1 == element.id || combo.element2 == element.id)
+        .where(
+          (combo) =>
+              combo.element1 == element.id || combo.element2 == element.id,
+        )
+        .where((combo) {
+          final ordered = [combo.element1, combo.element2]..sort();
+          return seenUnlocks.add(
+            '${ordered.first}:${ordered.last}:${combo.result}',
+          );
+        })
         .where((combo) => !gameState.discoveredElements.contains(combo.result))
         .take(4)
         .toList();
 
     final recipeUsed = outcome != null
         ? '${outcome!.ingredientA.emoji} ${outcome!.ingredientA.name} + ${outcome!.ingredientB.emoji} ${outcome!.ingredientB.name} = ${element.emoji} ${element.name}'
-        : (recipes.isNotEmpty ? gameState.recipeText(recipes.first) : 'This discovery has no stored recipe yet.');
+        : (recipes.isNotEmpty
+              ? gameState.recipeText(recipes.first)
+              : 'This discovery has no stored recipe yet.');
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text('Discovery', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Discovery',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
         child: ListView(
@@ -53,60 +64,72 @@ class DiscoveryScreen extends StatelessWidget {
             ).animate().fadeIn(duration: 250.ms),
             const SizedBox(height: 16),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: const Color(0xFFB89672), width: 1.2),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4B382E),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      element.category.name.toUpperCase(),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFFF7E8D2),
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 24,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.cardColor,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: const Color(0xFFB89672),
+                      width: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  EmojiBubble(
-                    element: element,
-                    size: 124,
-                    highlighted: true,
-                    accentColor: const Color(0xFFE1B26C),
-                  ).animate().scale(
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4B382E),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          element.category.name.toUpperCase(),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFFF7E8D2),
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      EmojiBubble(
+                        element: element,
+                        size: 124,
+                        highlighted: true,
+                        accentColor: const Color(0xFFE1B26C),
+                      ).animate().scale(
                         begin: const Offset(0.88, 0.88),
                         duration: 420.ms,
                         curve: Curves.easeOutBack,
                       ),
-                  const SizedBox(height: 18),
-                  Text(
-                    element.name,
-                    style: theme.textTheme.displayLarge?.copyWith(
-                      fontSize: 34,
-                      color: const Color(0xFFF6ECDD),
-                    ),
-                    textAlign: TextAlign.center,
+                      const SizedBox(height: 18),
+                      Text(
+                        element.name,
+                        style: theme.textTheme.displayLarge?.copyWith(
+                          fontSize: 34,
+                          color: const Color(0xFFF6ECDD),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'You discovered a new ingredient for the lab.',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFFE6D7C3),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'You discovered a new ingredient for the lab.',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFFE6D7C3),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ).animate().fadeIn(duration: 350.ms).slideY(begin: 0.08, duration: 350.ms),
+                )
+                .animate()
+                .fadeIn(duration: 350.ms)
+                .slideY(begin: 0.08, duration: 350.ms),
             const SizedBox(height: 20),
             _SectionCard(
               title: 'Recipe Used',
@@ -143,7 +166,10 @@ class DiscoveryScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF5E9D5),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFFD7B78E), width: 1),
+                      border: Border.all(
+                        color: const Color(0xFFD7B78E),
+                        width: 1,
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +226,9 @@ class DiscoveryScreen extends StatelessWidget {
                         ),
                       ]
                     : unlocks.map((combo) {
-                        final otherId = combo.element1 == element.id ? combo.element2 : combo.element1;
+                        final otherId = combo.element1 == element.id
+                            ? combo.element2
+                            : combo.element1;
                         final other = ElementData.elements[otherId]!;
                         final result = ElementData.elements[combo.result]!;
                         return Padding(
@@ -237,7 +265,9 @@ class DiscoveryScreen extends StatelessWidget {
                 backgroundColor: const Color(0xFF2E241A),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 18),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
               ),
               child: const Text('Keep Exploring'),
             ),
@@ -264,10 +294,7 @@ class _SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const _SectionCard({
-    required this.title,
-    required this.child,
-  });
+  const _SectionCard({required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -275,7 +302,7 @@ class _SectionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.66),
+        color: Colors.white.withValues(alpha: 0.66),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: const Color(0xFFD7B78E), width: 1.1),
       ),

@@ -15,7 +15,10 @@ class HintScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text('Hints', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Hints',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Consumer<GameState>(
         builder: (context, gameState, child) {
@@ -32,68 +35,84 @@ class HintScreen extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 'Use a hint to reveal an actionable recipe based on what you have already discovered.',
-                style: theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFF7A5D42)),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFF7A5D42),
+                ),
               ),
               const SizedBox(height: 22),
               Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2E241A),
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: const Color(0xFFB89672), width: 1.2),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'HINT TOKENS',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFFE5D2B8),
-                        letterSpacing: 1.4,
-                        fontWeight: FontWeight.w700,
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2E241A),
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(
+                        color: const Color(0xFFB89672),
+                        width: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${gameState.hintsRemaining}',
-                          style: theme.textTheme.displayLarge?.copyWith(
-                            color: Colors.white,
-                            fontSize: 42,
+                          'HINT TOKENS',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFFE5D2B8),
+                            letterSpacing: 1.4,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const Spacer(),
-                        ElevatedButton(
-                          onPressed: gameState.hintsRemaining > 0
-                              ? () {
-                                  final hint = gameState.useHint();
-                                  if (hint == null) return;
-                                  showModalBottomSheet<void>(
-                                    context: context,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) => _HintRevealSheet(hint: hint),
-                                  );
-                                }
-                              : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD79C55),
-                            foregroundColor: const Color(0xFF2E241A),
-                            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              '${gameState.hintsRemaining}',
+                              style: theme.textTheme.displayLarge?.copyWith(
+                                color: Colors.white,
+                                fontSize: 42,
+                              ),
+                            ),
+                            const Spacer(),
+                            ElevatedButton(
+                              onPressed: gameState.hintsRemaining > 0
+                                  ? () {
+                                      final hint = gameState.useHint();
+                                      if (hint == null) return;
+                                      showModalBottomSheet<void>(
+                                        context: context,
+                                        backgroundColor: Colors.transparent,
+                                        builder: (context) =>
+                                            _HintRevealSheet(hint: hint),
+                                      );
+                                    }
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFD79C55),
+                                foregroundColor: const Color(0xFF2E241A),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 22,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              child: const Text('Reveal Hint'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Each hint now reveals a recipe you can act on, not just a generic clue.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFFE5D2B8),
                           ),
-                          child: const Text('Reveal Hint'),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Each hint now reveals a recipe you can act on, not just a generic clue.',
-                      style: theme.textTheme.bodySmall?.copyWith(color: const Color(0xFFE5D2B8)),
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(duration: 280.ms).slideY(begin: 0.06, duration: 280.ms),
+                  )
+                  .animate()
+                  .fadeIn(duration: 280.ms)
+                  .slideY(begin: 0.06, duration: 280.ms),
               if (activeHint != null) ...[
                 const SizedBox(height: 18),
                 _HintCard(
@@ -104,16 +123,19 @@ class HintScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 'Suggested Paths',
-                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               ...suggestions.asMap().entries.map((entry) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: _HintCard(
-                    hint: entry.value,
-                    emphasized: entry.key == 0 && activeHint == null,
-                  ).animate().fadeIn(
+                  child:
+                      _HintCard(
+                        hint: entry.value,
+                        emphasized: entry.key == 0 && activeHint == null,
+                      ).animate().fadeIn(
                         delay: Duration(milliseconds: 80 * entry.key),
                         duration: 220.ms,
                       ),
@@ -139,10 +161,7 @@ class _HintCard extends StatelessWidget {
   final LabHint hint;
   final bool emphasized;
 
-  const _HintCard({
-    required this.hint,
-    this.emphasized = false,
-  });
+  const _HintCard({required this.hint, this.emphasized = false});
 
   @override
   Widget build(BuildContext context) {
@@ -171,12 +190,16 @@ class _HintCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             hint.title,
-            style: theme.textTheme.titleMedium?.copyWith(color: const Color(0xFF2E241A)),
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: const Color(0xFF2E241A),
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             hint.detail,
-            style: theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFF4A3726)),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: const Color(0xFF4A3726),
+            ),
           ),
           if (hint.recipe != null) ...[
             const SizedBox(height: 10),
@@ -227,12 +250,16 @@ class _HintRevealSheet extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 hint.title,
-                style: theme.textTheme.titleLarge?.copyWith(color: Colors.white),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
                 hint.detail,
-                style: theme.textTheme.bodyMedium?.copyWith(color: const Color(0xFFEBDCC7)),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFFEBDCC7),
+                ),
               ),
               if (hint.recipe != null) ...[
                 const SizedBox(height: 12),
@@ -253,7 +280,9 @@ class _HintRevealSheet extends StatelessWidget {
                     backgroundColor: const Color(0xFFD79C55),
                     foregroundColor: const Color(0xFF2E241A),
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                   child: const Text('Back to Hints'),
                 ),

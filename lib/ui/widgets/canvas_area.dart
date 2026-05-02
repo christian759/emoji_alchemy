@@ -31,7 +31,8 @@ class CanvasArea extends StatefulWidget {
 }
 
 class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
   final double _canvasSize = 5000;
   final double _bubbleSize = 82;
   final double _previewThreshold = 128;
@@ -53,7 +54,8 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
 
   void _setPreview(_CombinePreview? preview) {
     if (!mounted) return;
-    final didChange = _preview?.dragId != preview?.dragId ||
+    final didChange =
+        _preview?.dragId != preview?.dragId ||
         _preview?.targetId != preview?.targetId ||
         _preview?.result.id != preview?.result.id;
     if (didChange) {
@@ -70,12 +72,15 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
     double y,
   ) {
     _CombinePreview? closest;
+    final dragged = gameState.canvasElements.firstWhere(
+      (placed) => placed.id == dragId,
+    );
 
     for (final element in gameState.canvasElements) {
       if (element.id == dragId) continue;
 
       final combo = gameState.combinationForElements(
-        gameState.canvasElements.firstWhere((placed) => placed.id == dragId).element.id,
+        dragged.element.id,
         element.element.id,
       );
       if (combo == null) continue;
@@ -148,7 +153,7 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFFF8F0E1).withOpacity(0.96),
+          color: const Color(0xFFF8F0E1).withValues(alpha: 0.96),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: const Color(0xFFD4B48A), width: 1.1),
           boxShadow: const [
@@ -162,7 +167,11 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.auto_awesome_motion_rounded, size: 18, color: Color(0xFF8A4F2B)),
+            const Icon(
+              Icons.auto_awesome_motion_rounded,
+              size: 18,
+              color: Color(0xFF8A4F2B),
+            ),
             const SizedBox(width: 8),
             Text(
               'Slide elements together. A loose overlap is enough to mix.',
@@ -179,7 +188,7 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFF2E241A).withOpacity(0.96),
+        color: const Color(0xFF2E241A).withValues(alpha: 0.96),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: const Color(0xFFE1B26C), width: 1.3),
         boxShadow: const [
@@ -321,10 +330,18 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
                       ),
                       Consumer<GameState>(
                         builder: (context, gameState, child) {
+                          final orderedElements = [...gameState.canvasElements];
+                          orderedElements.sort((a, b) {
+                            if (a.id == _draggingId) return 1;
+                            if (b.id == _draggingId) return -1;
+                            return 0;
+                          });
                           return Stack(
-                            children: gameState.canvasElements.map((placed) {
+                            children: orderedElements.map((placed) {
                               final isDragging = _draggingId == placed.id;
-                              final isPreviewed = _preview?.dragId == placed.id || _preview?.targetId == placed.id;
+                              final isPreviewed =
+                                  _preview?.dragId == placed.id ||
+                                  _preview?.targetId == placed.id;
                               final bubble = EmojiBubble(
                                 element: placed.element,
                                 size: _bubbleSize,
@@ -342,7 +359,8 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
                                       _draggingId = placed.id;
                                     });
                                   },
-                                  onPanUpdate: (dragDetails) => _handlePanUpdate(placed, dragDetails),
+                                  onPanUpdate: (dragDetails) =>
+                                      _handlePanUpdate(placed, dragDetails),
                                   onPanEnd: (_) {
                                     setState(() {
                                       _draggingId = null;
@@ -357,16 +375,31 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
                                   },
                                   child: AnimatedScale(
                                     duration: const Duration(milliseconds: 140),
-                                    scale: isDragging ? 1.08 : (isPreviewed ? 1.03 : 1),
+                                    scale: isDragging
+                                        ? 1.08
+                                        : (isPreviewed ? 1.03 : 1),
                                     child: bubble
                                         .animate(
-                                          onPlay: (controller) => controller.repeat(reverse: true),
+                                          onPlay: (controller) =>
+                                              controller.repeat(reverse: true),
                                         )
                                         .moveY(
                                           begin: -2,
                                           end: 3,
-                                          delay: Duration(milliseconds: (placed.element.name.length % 5) * 140),
-                                          duration: (1800 + (placed.element.name.length * 40)).ms,
+                                          delay: Duration(
+                                            milliseconds:
+                                                (placed.element.name.length %
+                                                    5) *
+                                                140,
+                                          ),
+                                          duration:
+                                              (1800 +
+                                                      (placed
+                                                              .element
+                                                              .name
+                                                              .length *
+                                                          40))
+                                                  .ms,
                                           curve: Curves.easeInOut,
                                         ),
                                   ),
@@ -390,11 +423,17 @@ class _CanvasAreaState extends State<CanvasArea> with TickerProviderStateMixin {
                 left: 16,
                 bottom: 16,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.82),
+                    color: Colors.white.withValues(alpha: 0.82),
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0xFFD7B78E), width: 1),
+                    border: Border.all(
+                      color: const Color(0xFFD7B78E),
+                      width: 1,
+                    ),
                   ),
                   child: Text(
                     'Pinch to zoom • Drag to overlap • Instant mix when a recipe matches',

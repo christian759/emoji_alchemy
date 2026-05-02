@@ -8,17 +8,15 @@ import 'emoji_bubble.dart';
 class DiscoveryOverlay extends StatelessWidget {
   final CombinationOutcome outcome;
 
-  const DiscoveryOverlay({
-    super.key,
-    required this.outcome,
-  });
+  const DiscoveryOverlay({super.key, required this.outcome});
 
   @override
   Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
     final gameState = Provider.of<GameState>(context, listen: false);
     final hintText = gameState.unlockHintFor(outcome.result);
-    final recipeText = '${outcome.ingredientA.emoji} ${outcome.ingredientA.name} + '
+    final recipeText =
+        '${outcome.ingredientA.emoji} ${outcome.ingredientA.name} + '
         '${outcome.ingredientB.emoji} ${outcome.ingredientB.name} = '
         '${outcome.result.emoji} ${outcome.result.name}';
 
@@ -29,18 +27,23 @@ class DiscoveryOverlay extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'NEW DISCOVERY!',
-              style: TextStyle(
-                color: Colors.amber,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 4,
-              ),
-            ).animate().slideY(begin: -2, duration: 500.ms, curve: Curves.easeOutBack).fadeIn(),
-            const SizedBox(height: 40),
-            EmojiBubble(element: outcome.result, size: 150)
+                  'NEW DISCOVERY!',
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 4,
+                  ),
+                )
                 .animate()
-                .scale(begin: const Offset(0.2, 0.2), duration: 600.ms, curve: Curves.elasticOut),
+                .slideY(begin: -2, duration: 500.ms, curve: Curves.easeOutBack)
+                .fadeIn(),
+            const SizedBox(height: 40),
+            EmojiBubble(element: outcome.result, size: 150).animate().scale(
+              begin: const Offset(0.2, 0.2),
+              duration: 600.ms,
+              curve: Curves.elasticOut,
+            ),
             const SizedBox(height: 24),
             Text(
               outcome.result.name,
@@ -60,7 +63,10 @@ class DiscoveryOverlay extends StatelessWidget {
               ),
               child: Text(
                 outcome.result.category.name.toUpperCase(),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ).animate().fadeIn(delay: 800.ms).slideX(begin: 1),
             const SizedBox(height: 24),
@@ -76,7 +82,11 @@ class DiscoveryOverlay extends StatelessWidget {
                 children: [
                   Text(
                     recipeText,
-                    style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
@@ -96,9 +106,15 @@ class DiscoveryOverlay extends StatelessWidget {
                   onPressed: () => navigator.pop(),
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.white12,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                   ),
-                  child: const Text('CONTINUE', style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    'CONTINUE',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 TextButton(
@@ -117,9 +133,15 @@ class DiscoveryOverlay extends StatelessWidget {
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                   ),
-                  child: const Text('VIEW DISCOVERY', style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    'VIEW DISCOVERY',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ).animate().fadeIn(delay: 1.5.seconds),
